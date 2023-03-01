@@ -1,7 +1,10 @@
 <script type="text/template" id="refinements-lists-item-template">
+    {{#anchor}}<a href="{{anchor}}">{{/anchor}}
     <label class="{{cssClasses.label}} {{#isRefined}}checked{{/isRefined}}">
         <input class="{{cssClasses.checkbox}}" {{#isRefined}}checked{{/isRefined}} type="checkbox" value="{{value}}" />
-        {{value}}
+            {{value}}
         <span class="{{cssClasses.count}}">{{count}}</span>
     </label>
+    {{#anchor}}</a>{{/anchor}}
 </script>
+<script type="text/x-magento-init">{"*": {"algoliaShowTop3Facets": {}}}</script><!-- jwc -->

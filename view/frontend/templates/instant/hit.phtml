@@ -13,7 +13,7 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
 ?>
 
 <script type="text/template" id="instant-hit-template">
-    <div class="col-md-4 col-sm-6" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+    <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"> <!-- jwc -->
         <meta itemprop="position" content="{{__position}}" />
         <div class="result-wrapper" itemprop="item" itemscope itemtype="http://schema.org/Product">
             <meta itemprop="url"
@@ -28,12 +28,13 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
                 data-position="{{__position}}"
                 data-queryid="{{__queryID}}">
                 <div class="result-content">
+                    <div class="badges">{{#badgesLength}}<div>{{#badgesArray}}<div class="badge product-view__badge"><span>{{.}}</span></div>{{/badgesArray}}</div>{{/badgesLength}}</div> <!-- jwc -->
                     <div class="result-thumbnail">
                         {{#image_url}}<img itemprop="image" src="{{{image_url}}}" alt="{{{name}}}" />{{/image_url}}
                         {{^image_url}}<span class="no-image"></span>{{/image_url}}
                     </div>
                     <div class="result-sub-content">
-                        <h3 itemprop="name" class="result-title text-ellipsis">
+                        <h3 itemprop="name" class="result-title product-title-in-list"> <!-- jwc -->
                             {{{ _highlightResult.name.value }}}
                         </h3>
                         <div class="ratings">
@@ -68,6 +69,7 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
                                                         promotion
                                                     {{/<?php echo $origFormatedVar; ?>}}">
                                                 {{<?php echo $baseFormatedVar; ?>}}
+                                                <sup>.{{<?php echo $block->escapeHtml('price' . $priceKey . '_formated_cents'); ?>}}</sup> <!-- jwc -->
                                             </span>
                                             {{#<?php echo $origFormatedVar; ?>}}
                                                 <span class="before_special">
@@ -92,7 +94,10 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
                             data-indexname="{{__indexName}}"
                             data-position="{{__position}}"
                             data-queryid="{{__queryID}}"
-                            >
+                            onClick="this.querySelector('.icon').classList.add('hide');this.querySelector('.loading-spinner').classList.remove('hide');"
+                            > <!-- jwc -->
+                                <div class="hide loading-spinner loading-spinner-sm"></div> <!-- jwc -->
+                                <svg class="icon" role="presentation" focusable="false"><use href="<?= $block->escapeUrl($block->getViewFileUrl('images/icons-sprite.svg#shopping-cart')) ?>"></use></svg> <!-- jwc -->
                                 <span><?php echo __('Add to Cart') ?></span>
                             </button>
                         </form>
@@ -100,7 +105,43 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
                     </div>
                 </div>
                 <div class="algolia-clearfix"></div>
+                <!-- - jwc -->
+                <div class="store-availability">
+                    <div class="dispatch-label {{dispatchLabelClass}}" data-sku="{{sku}}" onclick="showAvailabilityModal(this, 'shipping')">
+                        <div class="circle"></div>
+                        {{#dispatch_eta_label}}
+                            {{dispatch_eta_label}}
+                        {{/dispatch_eta_label}}
+                        {{^dispatch_eta_label}}
+                            {{stock_status_label}}
+                        {{/dispatch_eta_label}}
+                    </div>
+                    <span class="check-store-availability" data-sku="{{sku}}" onclick="showAvailabilityModal(this, 'store')">
+                        <svg class="icon" role="presentation" focusable="false"><use href="<?= $block->escapeUrl($block->getViewFileUrl('images/icons-sprite.svg#pin')) ?>"></use></svg>
+                        <u><?php echo __('Check store availability') ?></u>
+                    </span>
+                </div>
+                <!-- + jwc -->
             </a>
         </div>
     </div>
 </script>
+
+<!-- jwc -->
+<script>
+    showLoadingSpinner = (el) => {
+        el.querySelector('.icon').classList.add('hide');
+        el.querySelector('.loading-spinner').classList.remove('hide');
+        el.setAttribute("disabled", "disabled");
+        el.classList.add("disabled");
+    }
+    requirejs(['availability-modal'], function (availabilityModal) {
+        showAvailabilityModal = (el, method) => {
+            availabilityModal({
+                "display":method,
+                "productSku":el.getAttribute("data-sku"),
+            });
+        }
+    });
+</script>
+<!-- jwc -->

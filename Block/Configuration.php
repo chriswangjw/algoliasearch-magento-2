@@ -145,6 +145,15 @@ class Configuration extends Algolia implements CollectionDataSourceInterface
 
         $attributesToFilter = $config->getAttributesToFilter($customerGroupId);
 
+        // - jwc: amasty shopby algolia support (treat as search page)
+        if ($request->getFullActionName() === 'ambrand_index_index' || $request->getFullActionName() === 'amshopby_index_index') {
+            $isCategoryPage = false;
+            $isSearchPage = true;
+        } else {
+            $isSearchPage = $this->isSearchPage();
+        }
+        // + jwc
+
         $algoliaJsConfig = [
             'instant' => [
                 'enabled' => $config->isInstantEnabled(),
@@ -209,9 +218,10 @@ class Configuration extends Algolia implements CollectionDataSourceInterface
                 null,
                 $customerGroupId
             )),
-            'isSearchPage' => $this->isSearchPage(),
+            'isSearchPage' => $isSearchPage, // jwc
             'isCategoryPage' => $isCategoryPage,
             'isLandingPage' => $this->isLandingPage(),
+            'pageType' => $request->getControllerName(), // jwc
             'removeBranding' => (bool) $config->isRemoveBranding(),
             'productId' => $productId,
             'priceKey' => $priceKey,
@@ -300,7 +310,7 @@ class Configuration extends Algolia implements CollectionDataSourceInterface
                 'orIn' => __('or in'),
                 'noProducts' => __('No products for query'),
                 'noResults' => __('No results'),
-                'refine' => __('Refine'),
+                'refine' => __('Filters'), // jwc
                 'selectedFilters' => __('Selected Filters'),
                 'clearAll' => __('Clear all'),
                 'previousPage' => __('Previous page'),
