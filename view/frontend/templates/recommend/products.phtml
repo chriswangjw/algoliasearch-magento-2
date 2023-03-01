@@ -5,14 +5,32 @@ $recommendConfig =  $viewModel->getAlgoliaRecommendConfiguration();
 
 if (isset($recommendConfig['enabledFBT']) || isset($recommendConfig['enabledRelated']) || isset($recommendConfig['isTrendItemsEnabledInPDP'])):
     $product = $viewModel->getProduct(); ?>
-    <div id="frequentlyBoughtTogether" class="recommend-component"></div>
-    <div id="relatedProducts" class="recommend-component"></div>
-    <div id="trendItems" class="trendsItem recommend-component"></div>
+    <!-- - jwc -->
+    <div class="related-products-wrapper">
+        <div class="loading">
+            <div class="lds-ring">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <div style="width: 100%">
+            <div id="relatedProducts" class="recommend-component"></div>
+        </div>
+    </div>
+
+    <!-- <div id="relatedProducts" class="recommend-component"></div> -->
+    <!-- <div id="frequentlyBoughtTogether" class="recommend-component"></div> -->
+    <!-- <div id="trendItems" class="trendsItem recommend-component"></div> -->
+    <!-- + jwc -->
     <script type="text/x-magento-init">
         {
             "*": {
                 "Algolia_AlgoliaSearch/recommend" : {
-                    "algoliObjectId" : ["<?= $product->getId() ?>"]
+                    "algoliObjectId" : ["<?= $product->getId() ?>"],
+                    "algoliaRecommendCartSvg" = "<?php echo $block->getViewFileUrl('images/icons-sprite.svg#shopping-cart') ?>",
                 }
             }
         }

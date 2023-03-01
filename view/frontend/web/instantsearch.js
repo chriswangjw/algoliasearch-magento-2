@@ -1,5 +1,14 @@
 requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algoliaBundle, priceUtils) {
 	algoliaBundle.$(function ($) {
+		// - jwc: if we're preventing backend rendering on this UA, don't swap out the page
+		// if (!algoliaConfig.isPreventBackendRenderingEnabled) {
+		// 	 return;
+		// }
+		if (new RegExp('prerender', 'i').test(navigator.userAgent)) {
+			algoliaConfig.hitsPerPage = 1000;
+		}
+		// + jwc
+
 		/** We have nothing to do here if instantsearch is not enabled **/
 		if (!algoliaConfig.instant.enabled || !(algoliaConfig.isSearchPage || !algoliaConfig.autocomplete.enabled)) {
 			return;
@@ -76,10 +85,16 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
 
 		var searchClient = algoliaBundle.algoliasearch(algoliaConfig.applicationId, algoliaConfig.apiKey);
 		var indexName = algoliaConfig.indexName + '_products';
+		// - jwc
 		var searchParameters = {
 			hitsPerPage: algoliaConfig.hitsPerPage,
-			ruleContexts: ruleContexts
+			ruleContexts: ruleContexts,
+			filters: algoliaConfig.amShopByFilters.reduce(
+				(builder, current) => ((builder ? builder + ' AND ' : builder) + current[0] + ':\'' + current[1] + '\''),
+				''
+			)
 		};
+		// + jwc
 		var instantsearchOptions = {
 			searchClient: searchClient,
 			indexName: indexName,
@@ -262,6 +277,7 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
                         return attribute.name;
                     }
 				}),
+				panelOptions: {templates: {header: '<div class="name">Filtering By</div>'}}, // jwc
 				transformItems: function (items) {
 					return items.map(function (item) {
 						var attribute = attributes.filter(function (_attribute) {
@@ -363,6 +379,9 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
 						item = transformHit(item, algoliaConfig.priceKey, search.helper);
 						// FIXME: transformHit is a global
 						item.isAddToCartEnabled = algoliaConfig.instant.isAddToCartEnabled;
+						item.badgesLength = item.auto_generated_badge ? item.auto_generated_badge.length > 0 : false; // jwc
+						if (item.auto_generated_badge) item.badgesArray = Array.isArray(item.auto_generated_badge) ? item.auto_generated_badge : item.auto_generated_badge.split("|"); // jwc
+						item.dispatchLabelClass = item.stock_qty && item.stock_qty > 0  ? 'green':''; // jwc
 						return item;
 					});
 				},
@@ -389,7 +408,10 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
 						item = transformHit(item, algoliaConfig.priceKey, search.helper);
 						// FIXME: transformHit is a global
 						item.isAddToCartEnabled = algoliaConfig.instant.isAddToCartEnabled;
-						item.algoliaConfig = window.algoliaConfig;
+						item.algoliaConfig = window.algoliaConfig;						
+						item.badgesLength = item.auto_generated_badge ? item.auto_generated_badge.length > 0 : false; // jwc
+						if (item.auto_generated_badge) item.badgesArray = Array.isArray(item.auto_generated_badge) ? item.auto_generated_badge : item.auto_generated_badge.split("|"); // jwc
+						item.dispatchLabelClass = item.stock_qty && item.stock_qty > 0  ? 'green':''; // jwc
 						return item;
 					})
 				}
@@ -471,9 +493,9 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
 		window.getFacetWidget = function (facet, templates) {
 			var panelOptions = {
 				templates: {
-					header: '<div class="name">'
+					header: '<div class="name" onclick="jQuery(this).closest(\'.ais-Panel-header\').toggleClass(\'show-body\')">'
 						+ (facet.label ? facet.label : facet.attribute)
-						+ '</div>',
+						+ '</div>', // jwc
 				},
 				hidden: function (options) {
 					if (!options.results) return true;
@@ -569,6 +591,25 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
 				}];
 			}
 		};
+
+		// - jwc
+		algolia.registerHook('beforeWidgetInitialization', function (allWidgetConfiguration, algoliaBundle) {
+			$.each(allWidgetConfiguration.refinementList, function (listIdx) {
+				const list = allWidgetConfiguration.refinementList[listIdx];
+					list.transformItems = function (items) {
+					const itemsWithAnchor = items.map(function (item) {
+						if (window.amShopByUrls && window.amShopByUrls[list.attribute] && window.amShopByUrls[list.attribute][item.value]) {
+							item.anchor = window.amShopByUrls[list.attribute][item.value];
+						}
+						return item;
+					});
+						return itemsWithAnchor;
+				}
+					allWidgetConfiguration.refinementList[listIdx] = list;
+			});
+				return allWidgetConfiguration;
+		});
+		// - jwc
 
 		var wrapper = document.getElementById('instant-search-facets-container');
 		$.each(algoliaConfig.facets, function (i, facet) {

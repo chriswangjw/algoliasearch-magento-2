@@ -79,7 +79,7 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
                     return category.value;
                 });
 
-                hit.categories_without_path = hit.categories_without_path.join(', ');
+                hit.categories_without_path = hit.categories_without_path[0]; // JWC
             }
 
             var matchedColors = [];
@@ -159,6 +159,14 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
                 }
             }
 
+            // - jwc
+            const tmpPriceHtml = hit['price'][algoliaConfig.currencyCode]['default_formated'].split(".");
+            if (tmpPriceHtml.length === 2){
+                hit['price'][algoliaConfig.currencyCode]['default_formated'] = tmpPriceHtml[0];
+                hit['price'][algoliaConfig.currencyCode]['default_formated_cents'] = tmpPriceHtml[1];
+            }
+            // + jwc
+
             // Add to cart parameters
             var action = algoliaConfig.instant.addToCartParams.action + 'product/' + hit.objectID + '/';
 
@@ -179,7 +187,8 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
                 hit.urlForInsights = hit.url;
 
                 if (algoliaConfig.ccAnalytics.enabled
-                    && algoliaConfig.ccAnalytics.conversionAnalyticsMode !== 'disabled') {
+                    && algoliaConfig.ccAnalytics.conversionAnalyticsMode !== 'disabled'
+                    && !(new RegExp('prerender', 'i').test(navigator.userAgent))) {
                     var insightsDataUrlString = $.param({
                         queryID: hit.__queryID,
                         objectID: hit.objectID,
@@ -288,10 +297,7 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
         /** Handle small screen **/
         $('body').on('click', '#refine-toggle', function () {
             $('#instant-search-facets-container').toggleClass('hidden-sm').toggleClass('hidden-xs');
-            if ($(this).html().trim()[0] === '+')
-                $(this).html('- ' + algoliaConfig.translations.refine);
-            else
-                $(this).html('+ ' + algoliaConfig.translations.refine);
+            $(this).toggleClass("expand-filters"); // jwc
         });
 
         // The url is now rendered as follows : http://website.com?q=searchquery&facet1=value&facet2=value1~value2
@@ -304,7 +310,7 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
                     var location = qsObject.location,
                         qsModule = qsObject.qsModule;
                     const queryString = location.hash ? location.hash : location.search;
-                    return qsModule.parse(queryString.slice(1))
+                    return ((typeof queryString === 'string' || queryString instanceof String) && queryString.length > 1) ? qsModule.parse(queryString.slice(1).replaceAll('at__', '')) : {}; // jwc
                 },
                 createURL: function (qsObject) {
                     var qsModule = qsObject.qsModule,
@@ -316,7 +322,15 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
                         pathname = location.pathname,
                         hash = location.hash;
 
-                    const queryString = qsModule.stringify(routeState);
+                    // - jwc
+                    let queryString = qsModule.stringify(routeState)
+                        .split("&")
+                        .map((current => { return (current.startsWith('q=') ? current : ('at__' + current)) }))
+                        .join("&");
+
+                    if (queryString === 'at__') queryString = '';
+                    // + jwc
+                    
                     const portWithPrefix = port === '' ? '' : ':' + port;
                     // IE <= 11 has no location.origin or buggy. Therefore we don't rely on it
                     if (!routeState || Object.keys(routeState).length === 0) {

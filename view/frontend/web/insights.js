@@ -91,6 +91,16 @@ requirejs([
             this.bindClickedEvents();
             this.bindViewedEvents();
 
+            // - jwc
+            algolia.registerHook('afterInsightsBindEvents', function () {
+                if (algoliaConfig.pageType === 'product') {
+                    setTimeout(function () {
+                        history.pushState(null, "", location.href.split("?")[0]);
+                    }, 1000);
+                }
+            });
+            // + jwc
+
             algolia.triggerHooks('afterInsightsBindEvents', this);
 
         },
