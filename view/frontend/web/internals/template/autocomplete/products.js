@@ -18,7 +18,7 @@ define([], function () {
                 data-objectId=${item.objectID} data-index=${item.__autocomplete_indexName} data-queryId=${item.__autocomplete_queryID}>
                 <div class="thumb"><img src="${item.thumbnail_url || ''}" alt="${item.name || ''}"/></div>
                 <div class="info">
-                    ${components.Highlight({hit: item, attribute: 'name'})}
+                    <div class="algoliasearch-autocomplete-title">${components.Highlight({hit: _data, attribute: 'name'}) || ''}</div> <!-- jwc -->
                     <div class="algoliasearch-autocomplete-category">
                         ${this.getColorHtml(item, components, html)}
                         ${this.getCategoriesHtml(item, components, html)}
@@ -69,7 +69,7 @@ define([], function () {
             const priceGroup =  algoliaConfig.priceGroup || 'default';
 
             return html `<div className="algoliasearch-autocomplete-price">
-                <span className="after_special ${algoliaConfig.origFormatedVar != null ? 'promotion' : ''}">
+                <span className="after_special ${_data['price'][algoliaConfig.currencyCode]['default_original_formated'] != null ? 'promotion' : ''}"> <!-- jwc -->
                     ${item['price'][algoliaConfig.currencyCode][priceGroup + '_formated']}
                 </span>
                 ${this.getOriginalPriceHtml(item, html, priceGroup)}
