@@ -7,12 +7,14 @@
 -->
 <page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <!-- - jwc -->
-        <referenceContainer name="product.container">
-            <container name="algolia.recommend.product.outer" htmlTag="div" htmlClass="product-recs-wrapper" before="product.tabs">
-                <block class="Magento\Catalog\Block\Product\View" name="algolia.recommend.product.internal" template="Algolia_AlgoliaSearch::recommend/products.phtml"/>
+        <referenceContainer name="content.aside">
+            <container name="algolia.recommend.product.outer" htmlTag="div" htmlClass="product-recs-wrapper" before="product.tabs"> <!-- jwc -->
+            <block name="algolia.product.view" template="Algolia_AlgoliaSearch::recommend/products.phtml" >
+            <arguments>
+                <argument name="view_model" xsi:type="object">Algolia\AlgoliaSearch\ViewModel\Recommend\ProductView</argument>
+            </arguments>
+            </block>
             </container>
         </referenceContainer>
-        <!-- + jwc -->
     </body>
 </page>
