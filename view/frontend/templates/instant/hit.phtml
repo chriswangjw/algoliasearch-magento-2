@@ -105,24 +105,24 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
                     </div>
                 </div>
                 <div class="algolia-clearfix"></div>
-                <!-- - jwc -->
-                <div class="store-availability">
-                    <div class="dispatch-label {{dispatchLabelClass}}" data-sku="{{sku}}" onclick="showAvailabilityModal(this, 'shipping')">
-                        <div class="circle"></div>
-                        {{#dispatch_eta_label}}
-                            {{dispatch_eta_label}}
-                        {{/dispatch_eta_label}}
-                        {{^dispatch_eta_label}}
-                            {{stock_status_label}}
-                        {{/dispatch_eta_label}}
-                    </div>
-                    <span class="check-store-availability" data-sku="{{sku}}" onclick="showAvailabilityModal(this, 'store')">
-                        <svg class="icon" role="presentation" focusable="false"><use href="<?= $block->escapeUrl($block->getViewFileUrl('images/icons-sprite.svg#pin')) ?>"></use></svg>
-                        <u><?php echo __('Check store availability') ?></u>
-                    </span>
-                </div>
-                <!-- + jwc -->
             </a>
+            <!-- - jwc -->
+            <div class="store-availability">
+                <div class="dispatch-label {{dispatchLabelClass}}" data-sku="{{sku}}" onclick="showAvailabilityModal(this, 'shipping')">
+                    <div class="circle"></div>
+                    {{#dispatch_eta_label}}
+                        {{dispatch_eta_label}}
+                    {{/dispatch_eta_label}}
+                    {{^dispatch_eta_label}}
+                        {{stock_status_label}}
+                    {{/dispatch_eta_label}}
+                </div>
+                <span class="check-store-availability" data-sku="{{sku}}" onclick="showAvailabilityModal(this, 'store')">
+                    <svg class="icon" role="presentation" focusable="false"><use href="<?= $block->escapeUrl($block->getViewFileUrl('images/icons-sprite.svg#pin')) ?>"></use></svg>
+                    <u><?php echo __('Check store availability') ?></u>
+                </span>
+            </div>
+            <!-- + jwc -->
         </div>
     </div>
 </script>
