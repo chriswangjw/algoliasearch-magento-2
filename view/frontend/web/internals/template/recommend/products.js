@@ -8,20 +8,26 @@ define([], function () {
             }
             this.config = algoliaConfig;
             this.defaultIndexName = algoliaConfig.indexName + '_products';
-            return  html`<div class="product-details">
-                <a class="recommend-item product-url" href="${item.url}" data-objectid=${item.objectID}  data-index=${this.defaultIndexName}>
-                    <img class="product-img" src="${item.image_url}" alt="${item.name}"/>
-                    <p class="product-name">${item.name}</p>
-                    ${addTocart && html`
-                        <form class="addTocartForm" action="${action}" method="post" data-role="tocart-form">
-                            <input type="hidden" name="form_key" value="${algoliaConfig.recommend.addToCartParams.formKey}" />
-                            <input type="hidden" name="unec" value="${AlgoliaBase64.mageEncode(action)}"/>
-                            <input type="hidden" name="product" value="${item.objectID}" />
-                            <button type="submit" class="action tocart primary">
-                                <span>${algoliaConfig.translations.addToCart}</span>
-                            </button>
-                        </form>`
-                    }
+            return  html`<div class="result-wrapper">
+                <a class="result recommend-item product-url" href="${item.url}" data-objectid=${item.objectID}  data-index=${this.defaultIndexName}>
+                    <div class="result-content">
+                        <div class="result-thumbnail">
+                            <img class="product-img" src="${item.image_url}" alt="${item.name}"/>
+                        </div>
+                        <div class="result-sub-content">
+                            <p class="product-name">${item.name}</p>
+                            ${addTocart && html`
+                                <form class="addTocartForm" action="${action}" method="post" data-role="tocart-form">
+                                    <input type="hidden" name="form_key" value="${algoliaConfig.recommend.addToCartParams.formKey}" />
+                                    <input type="hidden" name="unec" value="${AlgoliaBase64.mageEncode(action)}"/>
+                                    <input type="hidden" name="product" value="${item.objectID}" />
+                                    <button type="submit" class="action tocart primary">
+                                        <span>${algoliaConfig.translations.addToCart}</span>
+                                    </button>
+                                </form>`
+                            }
+                        </div>
+                    </div>
                 </a>
             </div>`;
         },
