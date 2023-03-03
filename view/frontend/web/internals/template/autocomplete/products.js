@@ -18,7 +18,7 @@ define([], function () {
                 data-objectId=${item.objectID} data-index=${item.__autocomplete_indexName} data-queryId=${item.__autocomplete_queryID}>
                 <div class="thumb"><img src="${item.thumbnail_url || ''}" alt="${item.name || ''}"/></div>
                 <div class="info">
-                    <div class="algoliasearch-autocomplete-title">${components.Highlight({hit: _data, attribute: 'name'}) || ''}</div> <!-- jwc -->
+                    <div class="algoliasearch-autocomplete-title">${components.Highlight({hit: item, attribute: 'name'}) || ''}</div> <!-- jwc -->
                     <div class="algoliasearch-autocomplete-category">
                         ${this.getColorHtml(item, components, html)}
                         ${this.getCategoriesHtml(item, components, html)}
