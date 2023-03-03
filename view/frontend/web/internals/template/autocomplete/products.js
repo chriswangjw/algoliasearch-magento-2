@@ -69,7 +69,7 @@ define([], function () {
             const priceGroup =  algoliaConfig.priceGroup || 'default';
 
             return html `<div className="algoliasearch-autocomplete-price">
-                <span className="after_special ${_data['price'][algoliaConfig.currencyCode]['default_original_formated'] != null ? 'promotion' : ''}"> <!-- jwc -->
+                <span className="after_special ${item['price'][algoliaConfig.currencyCode]['default_original_formated'] != null ? 'promotion' : ''}"> <!-- jwc -->
                     ${item['price'][algoliaConfig.currencyCode][priceGroup + '_formated']}
                 </span>
                 ${this.getOriginalPriceHtml(item, html, priceGroup)}
