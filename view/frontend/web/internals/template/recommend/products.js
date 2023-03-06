@@ -43,6 +43,7 @@ define([], function () {
                                 </form>`
                             }
                         </div>
+                        <div class="store-availability"><div class="dispatch-label">${item.dispatch_eta_label}</div></div>
                     </div>
                 </a>
             </div>`;
