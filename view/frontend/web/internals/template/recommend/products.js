@@ -8,6 +8,12 @@ define([], function () {
             }
             this.config = algoliaConfig;
             this.defaultIndexName = algoliaConfig.indexName + '_products';
+            const tmpPriceHtml = item.price[this.config.currencyCode]['default_formated'].split(".");
+            if (tmpPriceHtml.length === 2){
+                item.price[this.config.currencyCode]['default_formated'] = tmpPriceHtml[0];
+                item.price[this.config.currencyCode]['default_formated_cents'] = tmpPriceHtml[1];
+            }
+
             return  html`<div class="result-wrapper">
                 <a class="result recommend-item product-url" href="${item.url}" data-objectid=${item.objectID}  data-index=${this.defaultIndexName}>
                     <div class="result-content">
@@ -16,13 +22,21 @@ define([], function () {
                         </div>
                         <div class="result-sub-content">
                             <p class="product-name">${item.name}</p>
+                            <div class="price-wrapper">
+                                <span class="after-special">
+                                    ${item.price[this.config.currencyCode]["default_formated"]}
+                                    <sup>.${item.price[this.config.currencyCode]["default_formated_cents"]}</sup>
+                                </span>
+                            </div>
                             ${addTocart && html`
                                 <form class="addTocartForm" action="${action}" method="post" data-role="tocart-form">
                                     <input type="hidden" name="form_key" value="${algoliaConfig.recommend.addToCartParams.formKey}" />
                                     <input type="hidden" name="unec" value="${AlgoliaBase64.mageEncode(action)}"/>
                                     <input type="hidden" name="product" value="${item.objectID}" />
                                     <button type="submit" class="action tocart primary">
-                                        <span>${algoliaConfig.translations.addToCart}</span>
+                                        <svg class="icon">
+                                            <use href="${item.algoliaRecommendCartSvg}"></use>
+                                        </svg>
                                     </button>
                                 </form>`
                             }

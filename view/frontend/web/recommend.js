@@ -83,6 +83,7 @@ define([
                             return recommendProductsHtml.getHeaderHtml(html,algoliaConfig.recommend.FBTTitle);
                         },
                         itemComponent({item, html}) {
+                            item.algoliaRecommendCartSvg = config.algoliaRecommendCartSvg ?? '';
                             return recommendProductsHtml.getItemHtml(item, html, algoliaConfig.recommend.isAddToCartEnabledInFBT);
                         },
                     });
@@ -98,6 +99,7 @@ define([
                             return recommendProductsHtml.getHeaderHtml(html,algoliaConfig.recommend.relatedProductsTitle);
                         },
                         itemComponent({item, html}) {
+                            item.algoliaRecommendCartSvg = config.algoliaRecommendCartSvg ?? '';
                             return recommendProductsHtml.getItemHtml(item, html, algoliaConfig.recommend.isAddToCartEnabledInRelatedProduct);
                         },
                     });
@@ -116,6 +118,7 @@ define([
                         return recommendProductsHtml.getHeaderHtml(html,algoliaConfig.recommend.trendingItemsTitle);
                     },
                     itemComponent({item, html}) {
+                        item.algoliaRecommendCartSvg = config.algoliaRecommendCartSvg ?? '';
                         return recommendProductsHtml.getItemHtml(item, html, algoliaConfig.recommend.isAddToCartEnabledInTrendsItem);
                     },
                 });
@@ -132,6 +135,7 @@ define([
                         return recommendProductsHtml.getHeaderHtml(html,algoliaConfig.recommend.trendingItemsTitle);
                     },
                     itemComponent({item, html}) {
+                        item.algoliaRecommendCartSvg = config.algoliaRecommendCartSvg ?? '';
                         return recommendProductsHtml.getItemHtml(item, html, algoliaConfig.recommend.isAddToCartEnabledInTrendsItem);
                     },
                 });

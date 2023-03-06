@@ -354,7 +354,7 @@ define(
                 },
             };
 
-            if (isMobile() === true) {
+            if (typeof isMobile === "function" && isMobile() === true) {
                 // Set debug to true, to be able to remove keyboard and be able to scroll in autocomplete menu
                 options.debug = true;
             }
