@@ -21,12 +21,14 @@ define([], function () {
                             <img class="product-img" src="${item.image_url}" alt="${item.name}"/>
                         </div>
                         <div class="result-sub-content">
-                            <p class="product-name">${item.name}</p>
-                            <div class="price-wrapper">
-                                <span class="after-special">
-                                    ${item.price[this.config.currencyCode]["default_formated"]}
-                                    <sup>.${item.price[this.config.currencyCode]["default_formated_cents"]}</sup>
-                                </span>
+                            <h3 class="result-title product-title-in-list">${item.name}</h3>
+                            <div class="ratings">
+                                <div class="price-wrapper">
+                                    <span class="after-special">
+                                        ${item.price[this.config.currencyCode]["default_formated"]}
+                                        <sup>.${item.price[this.config.currencyCode]["default_formated_cents"]}</sup>
+                                    </span>
+                                </div>
                             </div>
                             ${addTocart && html`
                                 <form class="addTocartForm" action="${action}" method="post" data-role="tocart-form">
