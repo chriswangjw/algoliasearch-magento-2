@@ -14,6 +14,7 @@ define([], function () {
                 item.price[this.config.currencyCode]['default_formated_cents'] = tmpPriceHtml[1];
             }
 
+            // - jwc
             const addToCartHtml = addTocart && html`
                 <form class="addTocartForm" action="${action}" method="post" data-role="tocart-form">
                     <input type="hidden" name="form_key" value="${algoliaConfig.recommend.addToCartParams.formKey}" />
@@ -26,6 +27,7 @@ define([], function () {
                     </button>
                 </form>
             `;
+            // + jwc
 
             return  html`<div class="result-wrapper">
                 <a class="result recommend-item product-url" href="${item.url}" data-objectid=${item.objectID}  data-index=${this.defaultIndexName}>
