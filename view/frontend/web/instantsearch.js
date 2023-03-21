@@ -379,9 +379,13 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
 						item = transformHit(item, algoliaConfig.priceKey, search.helper);
 						// FIXME: transformHit is a global
 						item.isAddToCartEnabled = algoliaConfig.instant.isAddToCartEnabled;
-						item.badgesLength = item.auto_generated_badge ? item.auto_generated_badge.length > 0 : false; // jwc
-						if (item.auto_generated_badge) item.badgesArray = Array.isArray(item.auto_generated_badge) ? item.auto_generated_badge : item.auto_generated_badge.split("|"); // jwc
-						item.dispatchLabelClass = item.stock_qty && item.stock_qty > 0  ? 'green':''; // jwc
+						// - jwc
+						item.badgesLength = item.auto_generated_badge ? item.auto_generated_badge.length > 0 : false;
+						if (item.auto_generated_badge) item.badgesArray = Array.isArray(item.auto_generated_badge) ? item.auto_generated_badge : item.auto_generated_badge.split("|");
+						item.dispatchLabelClass = 'unavailable';
+						if (item.stock_status_label === "Available") item.dispatchLabelClass = 'available';
+						else if (item.stock_status_label === "Pre-Order") item.dispatchLabelClass = 'pre-order';
+						// + jwc
 						return item;
 					});
 				},
@@ -409,9 +413,13 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
 						// FIXME: transformHit is a global
 						item.isAddToCartEnabled = algoliaConfig.instant.isAddToCartEnabled;
 						item.algoliaConfig = window.algoliaConfig;						
-						item.badgesLength = item.auto_generated_badge ? item.auto_generated_badge.length > 0 : false; // jwc
-						if (item.auto_generated_badge) item.badgesArray = Array.isArray(item.auto_generated_badge) ? item.auto_generated_badge : item.auto_generated_badge.split("|"); // jwc
-						item.dispatchLabelClass = item.stock_qty && item.stock_qty > 0  ? 'green':''; // jwc
+						// - jwc
+						item.badgesLength = item.auto_generated_badge ? item.auto_generated_badge.length > 0 : false;
+						if (item.auto_generated_badge) item.badgesArray = Array.isArray(item.auto_generated_badge) ? item.auto_generated_badge : item.auto_generated_badge.split("|");
+						item.dispatchLabelClass = 'unavailable';
+						if (item.stock_status_label === "Available") item.dispatchLabelClass = 'available';
+						else if (item.stock_status_label === "Pre-Order") item.dispatchLabelClass = 'pre-order';
+						// + jwc
 						return item;
 					})
 				}
