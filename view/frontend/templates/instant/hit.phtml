@@ -137,9 +137,10 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
     }
     requirejs(['availability-modal'], function (availabilityModal) {
         showAvailabilityModal = (el, method) => {
+            const sku = el.getAttribute("data-sku");
             availabilityModal({
                 "display":method,
-                "productSku":el.getAttribute("data-sku"),
+                "productSku":sku.indexOf(",") > -1 ? sku.split(",").shift() : sku,
             });
         }
     });
