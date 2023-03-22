@@ -383,7 +383,7 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
 						item.badgesLength = item.auto_generated_badge ? item.auto_generated_badge.length > 0 : false;
 						if (item.auto_generated_badge) item.badgesArray = Array.isArray(item.auto_generated_badge) ? item.auto_generated_badge : item.auto_generated_badge.split("|");
 						item.dispatchLabelClass = 'unavailable';
-						if (item.stock_status_label === "Available") item.dispatchLabelClass = 'available';
+						if (item.stock_status_label === "Available" || item.assembled_to_order === "Yes") item.dispatchLabelClass = 'available';
 						else if (item.stock_status_label === "Pre-Order") item.dispatchLabelClass = 'pre-order';
 						// + jwc
 						return item;
@@ -417,7 +417,7 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
 						item.badgesLength = item.auto_generated_badge ? item.auto_generated_badge.length > 0 : false;
 						if (item.auto_generated_badge) item.badgesArray = Array.isArray(item.auto_generated_badge) ? item.auto_generated_badge : item.auto_generated_badge.split("|");
 						item.dispatchLabelClass = 'unavailable';
-						if (item.stock_status_label === "Available") item.dispatchLabelClass = 'available';
+						if (item.stock_status_label === "Available" || item.assembled_to_order === "Yes") item.dispatchLabelClass = 'available';
 						else if (item.stock_status_label === "Pre-Order") item.dispatchLabelClass = 'pre-order';
 						// + jwc
 						return item;
