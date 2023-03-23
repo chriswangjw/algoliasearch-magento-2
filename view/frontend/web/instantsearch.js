@@ -519,7 +519,7 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
 							});
 							return disjunctiveFacetsNames.indexOf(facet.attribute) === -1;
 						case 'slider': // jwc
-							return options.results.facets_stats ? options.results.facets_stats[facet.attribute].min === options.results.facets_stats[facet.attribute].max : true; // jwc
+							return options.results.facets_stats && options.results.facets_stats[facet.attribute] ? options.results.facets_stats[facet.attribute].min === options.results.facets_stats[facet.attribute].max : true; // jwc
 						default:
 							return false;
 					}
