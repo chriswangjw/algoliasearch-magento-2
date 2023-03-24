@@ -19,43 +19,49 @@ define([
         const observer = new MutationObserver(function(mutations) {
             const $recommendSection = $('#relatedProducts .auc-Recommend');
             const observer2 = new MutationObserver(function(mutations) {
-                $('#relatedProducts .auc-Recommend-list').slick({
-                    dots: false,
-                    infinite: true,
-                    speed: 300,
-                    slidesToShow: 5,
-                    slidesToScroll: 5,
-                    responsive: [
-                        {
-                            breakpoint: 1370,
-                            settings: {
-                                slidesToShow: 4,
-                                slidesToScroll: 4
-                            }
-                        },
-                        {
-                            breakpoint: 1280,
-                            settings: {
-                                slidesToShow: 3,
-                                slidesToScroll: 3
-                            }
-                        },
-                        {
-                            breakpoint: 768,
-                            settings: {
-                                slidesToShow: 2,
-                                slidesToScroll: 2
-                            }
-                        },
-                        {
-                            breakpoint: 480,
-                            settings: {
-                                slidesToShow: 1,
-                                slidesToScroll: 1
-                            }
-                        },
-                    ]
-                });
+                if ($('#relatedProducts .auc-Recommend-list').is(":empty")) {
+                    $('#relatedProducts .auc-Recommend-container').append($(`
+                        <div class="auc-Recommend-no-items"><p>There are no related products</p></div>
+                    `));
+                } else {
+                    $('#relatedProducts .auc-Recommend-list').slick({
+                        dots: false,
+                        infinite: true,
+                        speed: 300,
+                        slidesToShow: 5,
+                        slidesToScroll: 5,
+                        responsive: [
+                            {
+                                breakpoint: 1370,
+                                settings: {
+                                    slidesToShow: 4,
+                                    slidesToScroll: 4
+                                }
+                            },
+                            {
+                                breakpoint: 1280,
+                                settings: {
+                                    slidesToShow: 3,
+                                    slidesToScroll: 3
+                                }
+                            },
+                            {
+                                breakpoint: 768,
+                                settings: {
+                                    slidesToShow: 2,
+                                    slidesToScroll: 2
+                                }
+                            },
+                            {
+                                breakpoint: 480,
+                                settings: {
+                                    slidesToShow: 1,
+                                    slidesToScroll: 1
+                                }
+                            },
+                        ]
+                    });
+                }
             });
             observer2.observe($recommendSection[0], { childList: true });
         });
