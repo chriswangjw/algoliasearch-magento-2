@@ -89,7 +89,7 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
                             <input type="hidden" name="product" value="{{objectID}}">
                             <input type="hidden" name="uenc" value="{{ addToCart.uenc }}">
                             <input name="form_key" type="hidden" value="{{ addToCart.formKey }}">
-                            <button type="submit" title="<?php echo __('Add to Cart') ?>" class="action tocart primary"
+                            <button type="submit" title="<?php echo __('Add to Cart') ?>" class="action tocart primary stock-status--{{dispatchLabelClass}}"
                             data-objectid="{{objectID}}"
                             data-indexname="{{__indexName}}"
                             data-position="{{__position}}"
