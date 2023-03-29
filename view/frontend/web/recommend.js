@@ -106,6 +106,13 @@ define([
                         },
                         itemComponent({item, html}) {
                             item.algoliaRecommendCartSvg = config.algoliaRecommendCartSvg ?? '';
+                            // - jwc
+                            item.badgesLength = item.auto_generated_badge ? item.auto_generated_badge.length > 0 : false;
+                            if (item.auto_generated_badge) item.badgesArray = Array.isArray(item.auto_generated_badge) ? item.auto_generated_badge : item.auto_generated_badge.split("|");
+                            item.dispatchLabelClass = 'unavailable';
+                            if (item.stock_status_label === "Available" || item.assembled_to_order === "Yes") item.dispatchLabelClass = 'available';
+                            else if (item.stock_status_label === "Pre-Order") item.dispatchLabelClass = 'pre-order';
+                            // + jwc
                             return recommendProductsHtml.getItemHtml(item, html, algoliaConfig.recommend.isAddToCartEnabledInRelatedProduct);
                         },
                     });
