@@ -76,14 +76,19 @@ define([
             const apiKey = algoliaConfig.apiKey;
             const recommendClient = recommend(appId, apiKey);
             const indexName = this.defaultIndexName;
-            if ($('body').hasClass('catalog-product-view') || $('body').hasClass('checkout-cart-index')) {
+            // - jwc
+            let objectIds = config.algoliObjectId;
+            if (!objectIds)
+                objectIds = $("[data-element='algolia_recs_object_ids']").text().split(",");
+            // + jwc                
+            if ($('body').hasClass('catalog-product-view') || $('body').hasClass('checkout-cart-index') || $('body').hasClass('cms-index-index') || $('body').hasClass('cms-page-view')) { // jwc
                 // --- Add the current product objectID here ---
                 if ((algoliaConfig.recommend.enabledFBT && $('body').hasClass('catalog-product-view')) || (algoliaConfig.recommend.enabledFBTInCart && $('body').hasClass('checkout-cart-index'))) {
                     recommendJs.frequentlyBoughtTogether({
                         container: '#frequentlyBoughtTogether',
                         recommendClient,
                         indexName,
-                        objectIDs: config.algoliObjectId,
+                        objectIDs: objectIds, // jwc
                         maxRecommendations: algoliaConfig.recommend.limitFBTProducts,
                         headerComponent({html}) {
                             return recommendProductsHtml.getHeaderHtml(html,algoliaConfig.recommend.FBTTitle);
@@ -94,12 +99,16 @@ define([
                         },
                     });
                 }
-                if ((algoliaConfig.recommend.enabledRelated && $('body').hasClass('catalog-product-view')) || (algoliaConfig.recommend.enabledRelatedInCart && $('body').hasClass('checkout-cart-index'))) {
+                if ((algoliaConfig.recommend.enabledRelated && $('body').hasClass('catalog-product-view'))
+                    || (algoliaConfig.recommend.enabledRelatedInCart && $('body').hasClass('checkout-cart-index')) // jwc
+                    || (algoliaConfig.recommend.enabledRelated && $('body').hasClass('cms-index-index')) // jwc
+                    || (algoliaConfig.recommend.enabledRelated && $('body').hasClass('cms-page-view')) // jwc
+                ) {
                     recommendJs.relatedProducts({
                         container: '#relatedProducts',
                         recommendClient,
                         indexName,
-                        objectIDs: config.algoliObjectId,
+                        objectIDs: objectIds, // jwc
                         maxRecommendations: algoliaConfig.recommend.limitRelatedProducts,
                         headerComponent({html}) {
                             return recommendProductsHtml.getHeaderHtml(html,algoliaConfig.recommend.relatedProductsTitle);
