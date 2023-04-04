@@ -95,7 +95,7 @@ requirejs([
             algolia.registerHook('afterInsightsBindEvents', function () {
                 if (algoliaConfig.pageType === 'product') {
                     setTimeout(function () {
-                        history.pushState(null, "", location.href.split("?")[0]);
+                        history.replaceState(null, "", location.href.split("?")[0]);
                     }, 1000);
                 }
             });
