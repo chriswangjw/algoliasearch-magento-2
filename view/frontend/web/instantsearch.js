@@ -104,6 +104,8 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
 					$('.algolia-instant-selector-results').hide();
 				} else {
 					helper.search();
+					window.dataLayer = window.dataLayer || []; // jwc
+					window.dataLayer.push({ event: 'Hits Viewed' }); // jwc
 					$('.algolia-instant-replaced-content').hide();
 					$('.algolia-instant-selector-results').show();
 				}
