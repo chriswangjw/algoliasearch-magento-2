@@ -102,16 +102,6 @@ requirejs([
             this.bindClickedEvents();
             this.bindViewedEvents();
 
-            // - jwc
-            algolia.registerHook('afterInsightsBindEvents', function () {
-                if (algoliaConfig.pageType === 'product') {
-                    setTimeout(function () {
-                        history.replaceState(null, "", location.href.split("?")[0]);
-                    }, 1000);
-                }
-            });
-            // + jwc
-
             algolia.triggerHooks('afterInsightsBindEvents', this);
 
         },
@@ -227,7 +217,9 @@ requirejs([
                     if ($('body').hasClass('catalog-product-view')) {
                         var objectId = $('#product_addtocart_form').find('input[name="product"]').val();
                         if (objectId) {
-                            var viewData = self.buildEventData(viewConfig.eventName, objectId, self.defaultIndexName);
+                            var viewData = self.buildEventData(viewConfig.eventName, objectId, self.defaultIndexName, null, localStorage.getItem("algolia-queryid")); // jwc
+                            $(".button--add-to.tocart").each((i,el) => el.dataset.queryid = localStorage.getItem("algolia-queryid")); // jwc
+                            localStorage.setItem("algolia-queryid", ""); // jwc
                             self.trackView(viewData);
                         }
                     }
@@ -257,6 +249,7 @@ requirejs([
         trackClick: function(eventData) {
             if (eventData.queryID) {
                 algoliaAnalytics.clickedObjectIDsAfterSearch(eventData);
+                localStorage.setItem("algolia-queryid", eventData.queryID); // jwc
             } else {
                 algoliaAnalytics.clickedObjectIDs(eventData);
             }
