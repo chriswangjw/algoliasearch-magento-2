@@ -27,6 +27,7 @@ define(
                 if (Array.isArray(hit.categories))
                     hit.categories = hit.categories.join(', ');
 
+                if (Array.isArray(hit.categories_without_path)) hit.categories_without_path = hit.categories_without_path[0]; // JWC
                 if (hit._highlightResult.categories_without_path && Array.isArray(hit.categories_without_path)) {
                     hit.categories_without_path = $.map(hit._highlightResult.categories_without_path, function (category) {
                         return category.value;
@@ -360,7 +361,7 @@ define(
                     },
                 };
 
-                if (isMobile() === true) {
+                if (typeof isMobile === "function" && isMobile() === true) { // jwc
                     // Set debug to true, to be able to remove keyboard and be able to scroll in autocomplete menu
                     options.debug = true;
                 }
