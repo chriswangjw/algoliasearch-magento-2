@@ -186,20 +186,20 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
 
                 hit.urlForInsights = hit.url;
 
-                if (algoliaConfig.ccAnalytics.enabled
-                    && algoliaConfig.ccAnalytics.conversionAnalyticsMode !== 'disabled'
-                    && !(new RegExp('prerender', 'i').test(navigator.userAgent))) {
-                    var insightsDataUrlString = $.param({
-                        queryID: hit.__queryID,
-                        objectID: hit.objectID,
-                        indexName: hit.__indexName
-                    });
-                    if (hit.url.indexOf('?') > -1) {
-                        hit.urlForInsights += insightsDataUrlString
-                    } else {
-                        hit.urlForInsights += '?' + insightsDataUrlString;
-                    }
-                }
+                // if (algoliaConfig.ccAnalytics.enabled
+                //     && algoliaConfig.ccAnalytics.conversionAnalyticsMode !== 'disabled'
+                //     && !(new RegExp('prerender', 'i').test(navigator.userAgent))) {
+                //     var insightsDataUrlString = $.param({
+                //         queryID: hit.__queryID,
+                //         objectID: hit.objectID,
+                //         indexName: hit.__indexName
+                //     });
+                //     if (hit.url.indexOf('?') > -1) {
+                //         hit.urlForInsights += insightsDataUrlString
+                //     } else {
+                //         hit.urlForInsights += '?' + insightsDataUrlString;
+                //     }
+                // }
             }
 
             return hit;

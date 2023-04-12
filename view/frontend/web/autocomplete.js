@@ -133,19 +133,19 @@ define(
 
                     hit.urlForInsights = hit.url;
 
-                    if (algoliaConfig.ccAnalytics.enabled
-                        && algoliaConfig.ccAnalytics.conversionAnalyticsMode !== 'disabled') {
-                        const insightsDataUrlString = $.param({
-                            queryID: hit.__autocomplete_queryID,
-                            objectID: hit.objectID,
-                            indexName: hit.__autocomplete_indexName
-                        });
-                        if (hit.url.indexOf('?') > -1) {
-                            hit.urlForInsights += insightsDataUrlString
-                        } else {
-                            hit.urlForInsights += '?' + insightsDataUrlString;
-                        }
-                    }
+                    // if (algoliaConfig.ccAnalytics.enabled
+                    //     && algoliaConfig.ccAnalytics.conversionAnalyticsMode !== 'disabled') {
+                    //     const insightsDataUrlString = $.param({
+                    //         queryID: hit.__autocomplete_queryID,
+                    //         objectID: hit.objectID,
+                    //         indexName: hit.__autocomplete_indexName
+                    //     });
+                    //     if (hit.url.indexOf('?') > -1) {
+                    //         hit.urlForInsights += insightsDataUrlString
+                    //     } else {
+                    //         hit.urlForInsights += '?' + insightsDataUrlString;
+                    //     }
+                    // }
                 }
 
                 return hit;
