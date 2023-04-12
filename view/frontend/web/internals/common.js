@@ -205,6 +205,28 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
             return hit;
         };
 
+        // - jwc
+        window.transformHitJW = function (item) {
+            item.badgesLength = item.auto_generated_badge ? item.auto_generated_badge.length > 0 : false;
+            if (item.auto_generated_badge) item.badgesArray = Array.isArray(item.auto_generated_badge) ? item.auto_generated_badge : item.auto_generated_badge.split("|");
+            item.dispatchLabelClass = 'unavailable';
+            if (item.stock_status_label === "Available" || item.assembled_to_order === "Yes") item.dispatchLabelClass = 'available';
+            else if (item.stock_status_label === "Pre-Order") item.dispatchLabelClass = 'pre-order';
+            // GTM - impressions
+            item.impressions = JSON.stringify({
+                id: item.objectID,
+                name: item.name.replace(/['"]+/g, ''),
+                price: item['price'][algoliaConfig.currencyCode]["default_formated"] ?? '',
+                category: item.categories_without_path ?? '',
+                list: item.categories_without_path ?? '',
+                brand: item.manufacturer ?? '',
+                quantity: 1,
+                position: item.__position,
+            });
+            return item;
+        }
+        // + jwc
+
         window.fixAutocompleteCssHeight = function () {
             if ($(document).width() > 768) {
                 $(".other-sections").css('min-height', '0');
