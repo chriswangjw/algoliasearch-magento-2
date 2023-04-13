@@ -133,6 +133,7 @@ define(
 
                     hit.urlForInsights = hit.url;
 
+                    // jwc
                     // if (algoliaConfig.ccAnalytics.enabled
                     //     && algoliaConfig.ccAnalytics.conversionAnalyticsMode !== 'disabled') {
                     //     const insightsDataUrlString = $.param({

@@ -186,6 +186,7 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
 
                 hit.urlForInsights = hit.url;
 
+                // jwc
                 // if (algoliaConfig.ccAnalytics.enabled
                 //     && algoliaConfig.ccAnalytics.conversionAnalyticsMode !== 'disabled'
                 //     && !(new RegExp('prerender', 'i').test(navigator.userAgent))) {
@@ -216,10 +217,10 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
             item.impressions = JSON.stringify({
                 id: item.objectID,
                 name: item.name.replace(/['"]+/g, ''),
-                price: item['price'][algoliaConfig.currencyCode]["default_formated"] ?? '',
-                category: item.categories_without_path ?? '',
-                list: item.categories_without_path ?? '',
-                brand: item.manufacturer ?? '',
+                price: item['price'][algoliaConfig.currencyCode]["default"] || '',
+                category: item.categories_without_path || '',
+                list: item.categories_without_path || '',
+                brand: item.manufacturer || '',
                 quantity: 1,
                 position: item.__position,
             });
