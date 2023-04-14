@@ -260,7 +260,8 @@ requirejs([
             var eventData = {
                 index: this.defaultIndexName,
                 eventName: this.config.personalization.filterClicked.eventName,
-                filters: filters
+                filters: filters,
+                queryID: $(".ais-InfiniteHits-list a.result:first").data('queryid'), // jwc
             };
 
             algoliaAnalytics.clickedFilters(eventData);
