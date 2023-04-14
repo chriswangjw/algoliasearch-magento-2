@@ -16,6 +16,14 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
     <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"> <!-- jwc -->
         <meta itemprop="position" content="{{__position}}" />
         <div class="result-wrapper" itemprop="item" itemscope itemtype="http://schema.org/Product">
+            <meta itemprop="sku" content="{{sku}}" />
+            <meta itemprop="mpn" content="{{mpn}}" />
+            <meta itemprop="availability" content="{{stock_status_label}}" />
+            <meta itemprop="name" content="{{name}}" />
+            <meta itemprop="description" content="{{short_description}}" />
+            <div itemprop="brand" itemtype="https://schema.org/Brand" itemscope>
+                <meta itemprop="name" content="{{manufacturer}}" />
+            </div>
             <meta itemprop="url"
                 {{^__queryID}} content="{{url}}" {{/__queryID}}
                 {{#__queryID}} content="{{urlForInsights}}" {{/__queryID}}
