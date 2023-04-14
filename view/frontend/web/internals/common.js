@@ -205,7 +205,7 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
 
             return hit;
         };
-
+        
         // - jwc
         window.transformHitJW = function (item) {
             item.badgesLength = item.auto_generated_badge ? item.auto_generated_badge.length > 0 : false;
@@ -214,6 +214,8 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
             if (item.stock_status_label === "Available" || item.assembled_to_order === "Yes") item.dispatchLabelClass = 'available';
             else if (item.stock_status_label === "Pre-Order") item.dispatchLabelClass = 'pre-order';
             // GTM - impressions
+            item.currencyCode = algoliaConfig.currencyCode;
+            item.category = item.categories_without_path;
             item.impressions = JSON.stringify({
                 id: item.objectID,
                 name: item.name.replace(/['"]+/g, ''),
@@ -221,7 +223,7 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
                 category: item.categories_without_path || '',
                 list: item.categories_without_path || '',
                 brand: item.manufacturer || '',
-                quantity: 1,
+                quantity: item.stock_status_label || '',
                 position: item.__position,
             });
             return item;
