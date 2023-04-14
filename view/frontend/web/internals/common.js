@@ -211,15 +211,57 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
             item.badgesLength = item.auto_generated_badge ? item.auto_generated_badge.length > 0 : false;
             if (item.auto_generated_badge) item.badgesArray = Array.isArray(item.auto_generated_badge) ? item.auto_generated_badge : item.auto_generated_badge.split("|");
             item.dispatchLabelClass = 'unavailable';
-            if (item.stock_status_label === "Available" || item.assembled_to_order === "Yes") item.dispatchLabelClass = 'available';
-            else if (item.stock_status_label === "Pre-Order") item.dispatchLabelClass = 'pre-order';
+            item.metaAvailability = "";
+            item.metaCondition = "";
+            item.metaPrice = item['price'][algoliaConfig.currencyCode]["default"] || '';
+            item.metaPriceValidUntil = item['price'][algoliaConfig.currencyCode]["special_to_date"] || '';
+            item.metaPriceCurrency = algoliaConfig.currencyCode;
+            switch (item.condition) {
+                case "Brand New/Unused":
+                    item.metaCondition = "https://schema.org/NewCondition";
+                    break;
+                case "As New":
+                case "Refurbished":
+                    item.metaCondition = "https://schema.org/RefurbishedCondition";
+                    break;
+                case "Ex-Demo":
+                case "Open Box":
+                case "Ex-Lease":
+                    item.metaCondition = "https://schema.org/UsedCondition";
+                    break;
+                case "Damaged Box":
+                    item.metaCondition = "https://schema.org/DamagedCondition";
+                    break;
+            }
+            switch (item.stock_status_label) {
+                case "Available":
+                    item.dispatchLabelClass = 'available'
+                    item.metaAvailability = "https://schema.org/InStock";
+                    break;
+                case "Pre-Order":
+                    item.dispatchLabelClass = 'pre-order'
+                    item.metaAvailability = "https://schema.org/PreOrder";
+                    break;
+                case "Temporarily Unavailable":
+                    item.metaAvailability = "https://schema.org/BackOrder";
+                    break;
+                case "End Of Life":
+                case "Unavailable":
+                    item.metaAvailability = "https://schema.org/Discontinued";
+                    break;
+                default:
+                    break;
+            }
+            if (item.assembled_to_order === "Yes") 
+                item.dispatchLabelClass = 'available';
+
             // GTM - impressions
             item.currencyCode = algoliaConfig.currencyCode;
             item.category = item.categories_without_path;
             item.impressions = JSON.stringify({
                 id: item.objectID,
                 name: item.name.replace(/['"]+/g, ''),
-                price: item['price'][algoliaConfig.currencyCode]["default"] || '',
+                price: item.metaPrice,
                 category: item.categories_without_path || '',
                 list: item.categories_without_path || '',
                 brand: item.manufacturer || '',

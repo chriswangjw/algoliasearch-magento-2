@@ -18,16 +18,22 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
         <div class="result-wrapper" itemprop="item" itemscope itemtype="http://schema.org/Product">
             <meta itemprop="sku" content="{{sku}}" />
             <meta itemprop="mpn" content="{{mpn}}" />
-            <meta itemprop="availability" content="{{stock_status_label}}" />
             <meta itemprop="name" content="{{name}}" />
             <meta itemprop="description" content="{{short_description}}" />
             <div itemprop="brand" itemtype="https://schema.org/Brand" itemscope>
                 <meta itemprop="name" content="{{manufacturer}}" />
             </div>
-            <meta itemprop="url"
-                {{^__queryID}} content="{{url}}" {{/__queryID}}
-                {{#__queryID}} content="{{urlForInsights}}" {{/__queryID}}
+            <div itemprop="offers" itemtype="https://schema.org/Offer" itemscope>
+                <meta itemprop="url"
+                    {{^__queryID}} content="{{url}}" {{/__queryID}}
+                    {{#__queryID}} content="{{urlForInsights}}" {{/__queryID}}
                 />
+                <meta itemprop="availability" content="{{metaAvailability}}" />
+                <meta itemprop="priceCurrency" content="{{metaPriceCurrency}}" />
+                <meta itemprop="itemCondition" content="{{metaCondition}}" />
+                <meta itemprop="price" content="{{metaPrice}}" />
+                <meta itemprop="priceValidUntil" content="{{metaPriceValidUntil}}" />
+            </div>
             <a class="result"
                 {{^__queryID}} href="{{url}}" {{/__queryID}}
                 {{#__queryID}} href="{{urlForInsights}}" {{/__queryID}}
