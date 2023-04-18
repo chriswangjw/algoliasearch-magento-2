@@ -227,10 +227,8 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
                 case "Ex-Demo":
                 case "Open Box":
                 case "Ex-Lease":
-                    item.metaCondition = "https://schema.org/UsedCondition";
-                    break;
                 case "Damaged Box":
-                    item.metaCondition = "https://schema.org/DamagedCondition";
+                    item.metaCondition = "https://schema.org/UsedCondition";
                     break;
             }
             switch (item.stock_status_label) {
@@ -259,7 +257,7 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
             item.currencyCode = algoliaConfig.currencyCode;
             item.category = item.categories_without_path;
             item.impressions = JSON.stringify({
-                id: item.objectID,
+                id: item.sku,
                 name: item.name.replace(/['"]+/g, ''),
                 price: item.metaPrice,
                 category: item.categories_without_path || '',
