@@ -18,7 +18,7 @@ define([
     const $relatedProducts = $('#relatedProducts');
     if ($relatedProducts.length) {
         const observer = new MutationObserver(function(mutations) {
-            const observer2 = new MutationObserver(function(mutations) { algoliaRecommendDynamic.generateRecommendSlick($relatedProducts); });
+            const observer2 = new MutationObserver(function(mutations) { algoliaRecommendDynamic.generateRecommendSlick(algoliaRecommendDynamic.constants.RELATED_PRODUCTS, $relatedProducts); });
             observer2.observe($('#relatedProducts .auc-Recommend')[0], { childList: true });
         });
         observer.observe($relatedProducts[0], { childList: true });
