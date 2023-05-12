@@ -63,7 +63,7 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
         window.getCookie = function(name) {
             var value = "; " + document.cookie;
             var parts = value.split("; " + name + "=");
-            if (parts.length == 2) {
+            if (parts.length >= 2) { // jwc
                 return parts.pop().split(";").shift();
             }
 
