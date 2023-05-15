@@ -214,7 +214,7 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
             item.metaAvailability = "";
             item.metaCondition = "";
             item.metaPrice = item['price'][algoliaConfig.currencyCode]["default"] || '';
-            item.metaPriceValidUntil = item['price'][algoliaConfig.currencyCode]["special_to_date"] || '';
+            item.metaPriceValidUntil = item['price'][algoliaConfig.currencyCode]["special_to_date"] ? new Date(item['price'][algoliaConfig.currencyCode]["special_to_date"]*1000).toISOString().substring(0, 10) : '';
             item.metaPriceCurrency = algoliaConfig.currencyCode;
             switch (item.condition) {
                 case "Brand New/Unused":

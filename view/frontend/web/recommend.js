@@ -6,7 +6,7 @@ define([
     'recommendProductsHtml',
     'domReady!',
     'slick'
-],function ($, algoliaBundle, recommend, recommendJs, recommendProductsHtml, algoliaRecommendDynamic) { // jwc
+],function ($, algoliaBundle, recommend, recommendJs, recommendProductsHtml) { // jwc
     'use strict';
 
     // - jwc
