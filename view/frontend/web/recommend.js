@@ -4,7 +4,6 @@ define([
     'recommend',
     'recommendJs',
     'recommendProductsHtml',
-    'algoliaRecommendDynamic', // jwc
     'domReady!',
     'slick'
 ],function ($, algoliaBundle, recommend, recommendJs, recommendProductsHtml, algoliaRecommendDynamic) { // jwc
@@ -15,14 +14,6 @@ define([
     if (new RegExp(botPattern, 'i').test(navigator.userAgent)) {
         return;
     }
-    const $relatedProducts = $('#relatedProducts');
-    if ($relatedProducts.length) {
-        const observer = new MutationObserver(function(mutations) {
-            const observer2 = new MutationObserver(function(mutations) { algoliaRecommendDynamic.generateRecommendSlick(algoliaRecommendDynamic.constants.RELATED_PRODUCTS, $relatedProducts); });
-            observer2.observe($('#relatedProducts .auc-Recommend')[0], { childList: true });
-        });
-        observer.observe($relatedProducts[0], { childList: true });
-    }
     // + jwc
 
     return function (config, element) {
@@ -32,39 +23,34 @@ define([
             const apiKey = algoliaConfig.apiKey;
             const recommendClient = recommend(appId, apiKey);
             const indexName = this.defaultIndexName;
-            // - jwc
-            let objectIds = config.algoliObjectId;
-            if (!objectIds)
-                objectIds = $("[data-element='algolia_recs_object_ids']").text().split(",");
-            // + jwc                
-            if ($('body').hasClass('catalog-product-view') || $('body').hasClass('checkout-cart-index') || $('body').hasClass('cms-index-index') || $('body').hasClass('cms-page-view')) { // jwc
+
+            if ($('body').hasClass('catalog-product-view') || $('body').hasClass('checkout-cart-index')) {
                 // --- Add the current product objectID here ---
                 if ((algoliaConfig.recommend.enabledFBT && $('body').hasClass('catalog-product-view')) || (algoliaConfig.recommend.enabledFBTInCart && $('body').hasClass('checkout-cart-index'))) {
+                    if ($('#frequentlyBoughtTogether').length) // jwc
                     recommendJs.frequentlyBoughtTogether({
                         container: '#frequentlyBoughtTogether',
                         recommendClient,
                         indexName,
-                        objectIDs: objectIds, // jwc
+                        objectIDs: config.algoliObjectId,
                         maxRecommendations: algoliaConfig.recommend.limitFBTProducts,
                         headerComponent({html}) {
                             return recommendProductsHtml.getHeaderHtml(html,algoliaConfig.recommend.FBTTitle);
                         },
                         itemComponent({item, html}) {
                             item.algoliaRecommendCartSvg = config.algoliaRecommendCartSvg ?? '';
+                            item = transformHitJW(item); // jwc
                             return recommendProductsHtml.getItemHtml(item, html, algoliaConfig.recommend.isAddToCartEnabledInFBT);
                         },
                     });
                 }
-                if ((algoliaConfig.recommend.enabledRelated && $('body').hasClass('catalog-product-view'))
-                    || (algoliaConfig.recommend.enabledRelatedInCart && $('body').hasClass('checkout-cart-index')) // jwc
-                    || (algoliaConfig.recommend.enabledRelated && $('.pagebuilder-algolia-recs.product-recs-wrapper').length && $('body').hasClass('cms-index-index')) // jwc
-                    || (algoliaConfig.recommend.enabledRelated && $('.pagebuilder-algolia-recs.product-recs-wrapper').length && $('body').hasClass('cms-page-view')) // jwc
-                ) {
+                if ((algoliaConfig.recommend.enabledRelated && $('body').hasClass('catalog-product-view')) || (algoliaConfig.recommend.enabledRelatedInCart && $('body').hasClass('checkout-cart-index'))) {
+                    if ($('#relatedProducts').length) // jwc
                     recommendJs.relatedProducts({
                         container: '#relatedProducts',
                         recommendClient,
                         indexName,
-                        objectIDs: objectIds, // jwc
+                        objectIDs: config.algoliObjectId,
                         maxRecommendations: algoliaConfig.recommend.limitRelatedProducts,
                         headerComponent({html}) {
                             return recommendProductsHtml.getHeaderHtml(html,algoliaConfig.recommend.relatedProductsTitle);
@@ -79,6 +65,7 @@ define([
             }
 
             if ((algoliaConfig.recommend.isTrendItemsEnabledInPDP && $('body').hasClass('catalog-product-view')) || (algoliaConfig.recommend.isTrendItemsEnabledInCartPage && $('body').hasClass('checkout-cart-index'))) {
+                if ($('#trendItems').length) // jwc
                 recommendJs.trendingItems({
                     container: '#trendItems',
                     facetName: algoliaConfig.recommend.trendItemFacetName ? algoliaConfig.recommend.trendItemFacetName : '',
@@ -91,11 +78,13 @@ define([
                     },
                     itemComponent({item, html}) {
                         item.algoliaRecommendCartSvg = config.algoliaRecommendCartSvg ?? '';
+                        item = transformHitJW(item); // jwc
                         return recommendProductsHtml.getItemHtml(item, html, algoliaConfig.recommend.isAddToCartEnabledInTrendsItem);
                     },
                 });
             } else if (algoliaConfig.recommend.enabledTrendItems && typeof config.recommendTrendContainer !== "undefined") {
                 let containerValue = "#" + config.recommendTrendContainer;
+                if ($(containerValue).length) // jwc
                 recommendJs.trendingItems({
                     container: containerValue,
                     facetName: config.facetName ? config.facetName : '',
@@ -108,6 +97,7 @@ define([
                     },
                     itemComponent({item, html}) {
                         item.algoliaRecommendCartSvg = config.algoliaRecommendCartSvg ?? '';
+                        item = transformHitJW(item); // jwc
                         return recommendProductsHtml.getItemHtml(item, html, algoliaConfig.recommend.isAddToCartEnabledInTrendsItem);
                     },
                 });
