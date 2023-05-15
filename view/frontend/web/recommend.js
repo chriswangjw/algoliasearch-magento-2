@@ -57,8 +57,8 @@ define([
                 }
                 if ((algoliaConfig.recommend.enabledRelated && $('body').hasClass('catalog-product-view'))
                     || (algoliaConfig.recommend.enabledRelatedInCart && $('body').hasClass('checkout-cart-index')) // jwc
-                    || (algoliaConfig.recommend.enabledRelated && $('body').hasClass('cms-index-index')) // jwc
-                    || (algoliaConfig.recommend.enabledRelated && $('body').hasClass('cms-page-view')) // jwc
+                    || (algoliaConfig.recommend.enabledRelated && $('.pagebuilder-algolia-recs.product-recs-wrapper').length && $('body').hasClass('cms-index-index')) // jwc
+                    || (algoliaConfig.recommend.enabledRelated && $('.pagebuilder-algolia-recs.product-recs-wrapper').length && $('body').hasClass('cms-page-view')) // jwc
                 ) {
                     recommendJs.relatedProducts({
                         container: '#relatedProducts',
