@@ -263,7 +263,7 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
                 category: item.categories_without_path || '',
                 list: item.categories_without_path || '',
                 brand: item.manufacturer || '',
-                quantity: item.stock_status_label || '',
+                quantity: 1,
                 position: item.__position,
             });
             const CLEARANCE_CATEGORY = "Clearance";
@@ -299,7 +299,7 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
                 item_list_id: tmpCategoriesWithoutPath.length > 0 ? tmpCategoriesWithoutPath[0] : '',
                 item_list_name: tmpCategoriesWithoutPath.length > 0 ? tmpCategoriesWithoutPath[0] : '',
                 item_brand: item.manufacturer || '',
-                quantity: item.stock_status_label || '',
+                quantity: 1,
                 index: item.__position,
             };
             tmpCategoriesWithoutPath.forEach((c,i) => tmpItems["item_category"+(i>0?i+1:'')] = c);
