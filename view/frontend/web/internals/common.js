@@ -266,6 +266,44 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
                 quantity: item.stock_status_label || '',
                 position: item.__position,
             });
+            const CLEARANCE_CATEGORY = "Clearance";
+            let tmpCategories = [], prevCategoryLevel = '', tmpCategoriesWithoutPath = [];
+            Object.values(item.categories).forEach((c, i) => {
+                if (c.length > 0) { 
+                    if (i===0) {
+                        prevCategoryLevel = c[0].trim();
+                        if (prevCategoryLevel === CLEARANCE_CATEGORY && c.length >= 2)
+                            prevCategoryLevel = c[1].trim();
+                        tmpCategories.push(prevCategoryLevel);
+                    } else if (c[0].indexOf(prevCategoryLevel) === 0) {
+                        prevCategoryLevel = c[0].trim();
+                        tmpCategories.push(prevCategoryLevel);
+                    } else if (c[0].indexOf(CLEARANCE_CATEGORY) > -1 && c.length >= 2) { 
+                        prevCategoryLevel = c[1].trim();
+                        tmpCategories.push(prevCategoryLevel);
+                    } else {
+                        // do nothing
+                    }
+                }
+            })
+            tmpCategories.forEach((c,i) => {
+                if (c.indexOf("/// ") > -1)
+                    tmpCategoriesWithoutPath.push(c.substring(c.lastIndexOf("/// ")+4));
+                else
+                    tmpCategoriesWithoutPath.push(c);
+            });
+            const tmpItems = {
+                item_id: item.sku,
+                item_name: item.name.replace(/['"]+/g, ''),
+                price: item.metaPrice,
+                item_list_id: tmpCategoriesWithoutPath.length > 0 ? tmpCategoriesWithoutPath[0] : '',
+                item_list_name: tmpCategoriesWithoutPath.length > 0 ? tmpCategoriesWithoutPath[0] : '',
+                item_brand: item.manufacturer || '',
+                quantity: item.stock_status_label || '',
+                index: item.__position,
+            };
+            tmpCategoriesWithoutPath.forEach((c,i) => tmpItems["item_category"+(i>0?i+1:'')] = c);
+            item.items = JSON.stringify(tmpItems);
             return item;
         }
         // + jwc
