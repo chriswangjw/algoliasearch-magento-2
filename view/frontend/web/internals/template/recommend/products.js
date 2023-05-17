@@ -8,11 +8,6 @@ define([], function () {
             }
             this.config = algoliaConfig;
             this.defaultIndexName = algoliaConfig.indexName + '_products';
-            const tmpPriceHtml = item.price[this.config.currencyCode]['default_formated'].split(".");
-            if (tmpPriceHtml.length === 2){
-                item.price[this.config.currencyCode]['default_formated'] = tmpPriceHtml[0];
-                item.price[this.config.currencyCode]['default_formated_cents'] = tmpPriceHtml[1];
-            }
 
             // - jwc
             const addToCartHtml = addTocart && html`
@@ -28,20 +23,31 @@ define([], function () {
                 </form>
             `;
 
+            let badgesHtmlArr = [];
+            item.badgesArray && item.badgesArray.forEach(b => badgesHtmlArr.push(html`<div class="badge product-view__badge"><span>${b}</span></div>`));
+
+            let priceHtml = html `<div className="algoliasearch-autocomplete-price">
+                <span className="after_special ${item['price'][algoliaConfig.currencyCode]['default_original_formated'] != null ? 'promotion' : ''}"> <!-- jwc -->
+                    ${item['price'][algoliaConfig.currencyCode]['default_formated']}
+                    <sup>.${item['price'][algoliaConfig.currencyCode]['default_formated_cents'] || ''}</sup>
+                </span>
+                ${item['price'][algoliaConfig.currencyCode]['default_original_formated'] ? html`<span class="before_special"> ${item['price'][algoliaConfig.currencyCode]['default_original_formated']} </span>`:''}
+            </div>`;
+
             return  html`<div class="result-wrapper">
                 <a class="result recommend-item product-url" href="${item.url}" data-objectid=${item.objectID}  data-index=${this.defaultIndexName}>
                     <div class="result-content">
+                        <div class="badges">${item.badgesLength && html`<div>${badgesHtmlArr}</div>`}</div>
                         <div class="result-thumbnail">
                             <img class="product-img" src="${item.image_url}" alt="${item.name}"/>
                         </div>
                         <div class="result-sub-content">
                             <h3 class="result-title product-title-in-list">${item.name}</h3>
                             <div class="ratings">
-                                <div class="price-wrapper">
-                                    <span class="after-special">
-                                        ${item.price[this.config.currencyCode]["default_formated"]}
-                                        <sup>.${item.price[this.config.currencyCode]["default_formated_cents"]}</sup>
-                                    </span>
+                                <div class="result-sub-content">
+                                    <div class="price">
+                                        <div class="price-wrapper">${priceHtml}</div>
+                                    </div>
                                 </div>
                             </div>
                             ${addToCartHtml}
@@ -56,6 +62,6 @@ define([], function () {
         },
         getHeaderHtml: function (html,title) {
             return html`<h3 class="auc-Recommend-title">${title}</h3>`;
-        }
+        },
     };
 });
