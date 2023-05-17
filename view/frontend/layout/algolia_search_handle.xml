@@ -2,6 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <script src="Algolia_AlgoliaSearch::internals/common.js"/>
+        <script src="JWC_GenTweaks::js/algolia/algolia-common.js"/> <!-- jwc -->
 
         <script src="Algolia_AlgoliaSearch::instantsearch.js"/>
         <script src="Algolia_AlgoliaSearch::insights.js"/>
