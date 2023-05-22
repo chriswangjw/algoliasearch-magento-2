@@ -10,9 +10,6 @@
          class="<?php echo $block->escapeHtml($block->hasFacets() ? ' with-facets' : ''); ?>">
         <div class="row">
             <div id="algolia-left-container"> <!-- jwc -->
-                <div id="refine-toggle" class="visible-xs visible-sm expand-filters">
-                    <?php echo $block->escapeHtml(__('Refine')); ?>
-                </div>
                 <div class="hidden-xs hidden-sm" id="instant-search-facets-container"> <!-- jwc -->
                 </div>
             </div>
@@ -25,6 +22,9 @@
                                 <div class="algolia-infos-filter-wrapper">
                                     <div class="algolia-infos-current-wrapper" id="current-refinements"></div>
                                     <div class="algolia-infos-clear-wrapper" id="clear-refinements"></div>
+                                </div>
+                                <div id="refine-toggle" class="visible-xs visible-sm expand-filters">
+                                    <?php echo $block->escapeHtml(__('Refine')); ?>
                                 </div>
                                 <div class="algolia-infos-search-wrapper" id="instant-search-bar">
                                     <label><?php echo $block->escapeHtml(__('Filter this page')); ?></label>
