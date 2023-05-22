@@ -852,7 +852,7 @@ class Data
                 ->columns('product_id')
                 ->columns(['ordered_qty' => new \Zend_Db_Expr('SUM(qty_ordered)')])
                 ->columns(['total_ordered' => new \Zend_Db_Expr('SUM(row_total)')])
-                ->where('product_id IN (?) AND created_at < (NOW() - INTERVAL 1 MONTH)', $ids) // jwc
+                ->where('product_id IN (?) AND created_at < (NOW() - INTERVAL 3 MONTH) AND qty_invoiced > 0', $ids) // jwc
                 ->group('product_id');
             $salesData = $salesConnection->fetchAll($select, [], \PDO::FETCH_GROUP|\PDO::FETCH_ASSOC|\PDO::FETCH_UNIQUE);
         }
