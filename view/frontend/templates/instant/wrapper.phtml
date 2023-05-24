@@ -9,43 +9,39 @@
     <div id="algolia_instant_selector"
          class="<?php echo $block->escapeHtml($block->hasFacets() ? ' with-facets' : ''); ?>">
         <div class="row">
-            <!-- - jwc -->
-            <div id="algolia-left-container">
-                <div class="hidden-xs hidden-sm" id="instant-search-facets-container-wrapper">
-                    <div class="modal-overlay"></div>
-                    <div id="instant-search-facets-container"></div>
+            <div class="col-md-3" id="algolia-left-container">
+                <div id="refine-toggle" class="visible-xs visible-sm">
+                    + <?php echo $block->escapeHtml(__('Refine')); ?>
+                </div>
+                <div class="hidden-xs hidden-sm" id="instant-search-facets-container">
+                    <div id="clear-refinements"></div>
+                    <div id="current-refinements"></div>
                 </div>
             </div>
-            <!-- + jwc -->
 
-            <div id="algolia-right-container"> <!-- jwc -->
+            <div class="col-md-9" id="algolia-right-container">
                 <div class="row">
-                     <!-- - jwc -->
-                        {{#second_bar}}
-                            <div class="algolia-infos-container" id="algolia-infos-container">
-                                <div class="algolia-infos-filter-wrapper">
-                                    <div class="algolia-infos-current-wrapper" id="current-refinements"></div>
-                                    <div class="algolia-infos-clear-wrapper" id="clear-refinements"></div>
-                                </div>
-                                <div id="refine-toggle" class="visible-xs visible-sm expand-filters">
-                                    <?php echo $block->escapeHtml(__('Refine')); ?>
-                                </div>
-                                <div class="algolia-infos-search-wrapper" id="instant-search-bar">
-                                    <label><?php echo $block->escapeHtml(__('Filter this page')); ?></label>
-                                </div>
-                                <div class="algolia-infos-stats-wrapper" id="algolia-stats"></div>
-                                <div class="algolia-infos-sorts-wrapper">
-                                    <div id="algolia-sorts"></div>
-                                    <label><?php echo $block->escapeHtml(__('Sort by')); ?></label>
-                                </div>
-                            </div>
-                        {{/second_bar}}
-                    <!-- + jwc -->
+                    <div class="col-md-12">
+                        <div>
+                            {{#second_bar}}
+                               <div id="instant-search-bar"></div>
+                            {{/second_bar}}
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
-                    <div>  <!-- jwc -->
+                    <div class="col-md-12">
                         <div itemscope itemtype="http://schema.org/ItemList" class="hits">
-                            <!-- jwc -->
+                            <div class="algolia-infos">
+                                <div class="pull-left" id="algolia-stats"></div>
+                                <div class="pull-right">
+                                    <div class="sort-by-label pull-left">
+                                        <?php echo $block->escapeHtml(__('SORT BY')); ?> &nbsp;
+                                    </div>
+                                    <div class="pull-left" id="algolia-sorts"></div>
+                                </div>
+                                <div class="algolia-clearfix"></div>
+                            </div>
                             <div id="algolia-banner"></div>
                             <div id="instant-empty-results-container"></div>
                             <div id="instant-search-results-container"></div>
