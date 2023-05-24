@@ -297,7 +297,7 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
 
         /** Handle small screen **/
         $('body').on('click', '#refine-toggle', function () {
-            $('#instant-search-facets-container').toggleClass('hidden-sm').toggleClass('hidden-xs');
+            $('#instant-search-facets-container-wrapper').toggleClass('hidden-sm').toggleClass('hidden-xs'); // jwc
             $(this).toggleClass("expand-filters"); // jwc
         });
 

@@ -9,10 +9,14 @@
     <div id="algolia_instant_selector"
          class="<?php echo $block->escapeHtml($block->hasFacets() ? ' with-facets' : ''); ?>">
         <div class="row">
-            <div id="algolia-left-container"> <!-- jwc -->
-                <div class="hidden-xs hidden-sm" id="instant-search-facets-container"> <!-- jwc -->
+            <!-- - jwc -->
+            <div id="algolia-left-container">
+                <div class="hidden-xs hidden-sm" id="instant-search-facets-container-wrapper">
+                    <div class="modal-overlay"></div>
+                    <div id="instant-search-facets-container"></div>
                 </div>
             </div>
+            <!-- + jwc -->
 
             <div id="algolia-right-container"> <!-- jwc -->
                 <div class="row">
