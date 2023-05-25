@@ -3,6 +3,7 @@
     <head>
         <script src="Algolia_AlgoliaSearch::internals/common.js"/>
         <script src="JWC_GenTweaks::js/algolia/algolia-common.js"/> <!-- jwc -->
+        <script src="JWC_GenTweaks::js/algolia/algolia-common-dynamic.js"/> <!-- jwc -->
 
         <script src="Algolia_AlgoliaSearch::instantsearch.js"/>
         <script src="Algolia_AlgoliaSearch::insights.js"/>
