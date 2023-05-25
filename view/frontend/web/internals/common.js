@@ -297,8 +297,12 @@ requirejs(['algoliaBundle'], function(algoliaBundle) {
 
         /** Handle small screen **/
         $('body').on('click', '#refine-toggle', function () {
-            $('#instant-search-facets-container-wrapper').toggleClass('hidden-sm').toggleClass('hidden-xs'); // jwc
-            $(this).toggleClass("expand-filters"); // jwc
+            // jwc
+            // $('#instant-search-facets-container').toggleClass('hidden-sm').toggleClass('hidden-xs');
+            // if ($(this).html().trim()[0] === '+')
+            //     $(this).html('- ' + algoliaConfig.translations.refine);
+            // else
+            //     $(this).html('+ ' + algoliaConfig.translations.refine);
         });
 
         // The url is now rendered as follows : http://website.com?q=searchquery&facet1=value&facet2=value1~value2
