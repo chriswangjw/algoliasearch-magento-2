@@ -83,7 +83,7 @@ requirejs(['algoliaBundle', 'Magento_Catalog/js/price-utils'], function (algolia
 			ruleContexts.push('magento-landingpage-' + algoliaConfig.request.landingPageId);
 		}
 
-		var searchClient = algoliaBundle.algoliasearch(algoliaConfig.applicationId, algoliaConfig.apiKey);
+		var searchClient = algoliaBundle.algoliasearch(algoliaConfig.applicationId, algoliaConfig.apiKey, {hosts: [{url: 'catalog.jw.com.au'}, {url: algoliaConfig.applicationId+'-dsn.algolia.net'}]}); // jwc
 		var indexName = algoliaConfig.indexName + '_products';
 		// - jwc
 		var searchParameters = {

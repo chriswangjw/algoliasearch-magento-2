@@ -40,6 +40,8 @@ requirejs([
                 apiKey: this.config.apiKey
             });
 
+            algoliaAnalytics._endpointOrigin = 'https://insights.jw.com.au'; // jwc
+
             var userAgent = 'insights-js-in-magento (' + this.config.extensionVersion + ')';
             algoliaAnalytics.addAlgoliaAgent(userAgent);
 
