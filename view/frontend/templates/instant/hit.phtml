@@ -112,7 +112,7 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
                             data-indexname="{{__indexName}}"
                             data-position="{{__position}}"
                             data-queryid="{{__queryID}}"
-                            onClick="this.querySelector('.icon').classList.add('hide');this.querySelector('.loading-spinner').classList.remove('hide');"
+                            onClick="window.addToCartOnClick(this)"
                             > <!-- jwc -->
                                 <div class="hide loading-spinner loading-spinner-sm"></div> <!-- jwc -->
                                 <svg class="icon" role="presentation" focusable="false"><use href="<?= $block->escapeUrl($block->getViewFileUrl('images/icons-sprite.svg#shopping-cart')) ?>"></use></svg> <!-- jwc -->
