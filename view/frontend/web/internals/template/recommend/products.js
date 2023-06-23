@@ -6,7 +6,6 @@ define([], function () {
             if(correctFKey != "" && algoliaConfig.recommend.addToCartParams.formKey != correctFKey) {
                 algoliaConfig.recommend.addToCartParams.formKey = correctFKey;
             }
-            this.config = algoliaConfig;
             this.defaultIndexName = algoliaConfig.indexName + '_products';
 
             // - jwc
