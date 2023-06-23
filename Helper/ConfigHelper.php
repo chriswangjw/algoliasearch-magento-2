@@ -48,7 +48,6 @@ class ConfigHelper
     public const PRODUCT_ATTRIBUTES = 'algoliasearch_products/products/product_additional_attributes';
     public const PRODUCT_CUSTOM_RANKING = 'algoliasearch_products/products/custom_ranking_product_attributes';
     public const USE_ADAPTIVE_IMAGE = 'algoliasearch_products/products/use_adaptive_image';
-    public const INDEX_OUT_OF_STOCK_OPTIONS = 'algoliasearch_products/products/index_out_of_stock_options';
 
     public const CATEGORY_ATTRIBUTES = 'algoliasearch_categories/categories/category_additional_attributes';
     public const CATEGORY_CUSTOM_RANKING = 'algoliasearch_categories/categories/custom_ranking_category_attributes';
@@ -73,7 +72,6 @@ class ConfigHelper
     public const GA_TRIGGER_ON_UI_INTERACTION = 'algoliasearch_analytics/analytics_group/trigger_on_ui_interaction';
     public const GA_PUSH_INITIAL_SEARCH = 'algoliasearch_analytics/analytics_group/push_initial_search';
 
-    public const NUMBER_OF_ELEMENT_BY_PAGE = 'algoliasearch_advanced/advanced/number_of_element_by_page';
     public const REMOVE_IF_NO_RESULT = 'algoliasearch_advanced/advanced/remove_words_if_no_result';
     public const PARTIAL_UPDATES = 'algoliasearch_advanced/advanced/partial_update';
     public const CUSTOMER_GROUPS_ENABLE = 'algoliasearch_advanced/advanced/customer_groups_enable';
@@ -89,7 +87,6 @@ class ConfigHelper
         'algoliasearch_advanced/advanced/backend_rendering_allowed_user_agents';
     public const NON_CASTABLE_ATTRIBUTES = 'algoliasearch_advanced/advanced/non_castable_attributes';
     public const MAX_RECORD_SIZE_LIMIT = 'algoliasearch_advanced/advanced/max_record_size_limit';
-    public const ARCHIVE_LOG_CLEAR_LIMIT = 'algoliasearch_advanced/advanced/archive_clear_limit';
 
     public const SHOW_OUT_OF_STOCK = 'cataloginventory/options/show_out_of_stock';
 
@@ -124,6 +121,11 @@ class ConfigHelper
     protected const FREQUENTLY_BOUGHT_TOGETHER_TITLE = 'algoliasearch_recommend/recommend/frequently_bought_together/title';
     protected const RELATED_PRODUCTS_TITLE = 'algoliasearch_recommend/recommend/related_product/title';
     protected const TRENDING_ITEMS_TITLE = 'algoliasearch_recommend/recommend/trends_item/title';
+
+    // Indexing Queue Advanced settings
+    public const ENHANCED_QUEUE_ARCHIVE = 'algoliasearch_advanced/queue/enhanced_archive';
+    public const NUMBER_OF_ELEMENT_BY_PAGE = 'algoliasearch_advanced/queue/number_of_element_by_page';
+    public const ARCHIVE_LOG_CLEAR_LIMIT = 'algoliasearch_advanced/queue/archive_clear_limit';
 
     /**
      * @var Magento\Framework\App\Config\ScopeConfigInterface
@@ -211,18 +213,6 @@ class ConfigHelper
         $this->groupCollection = $groupCollection;
     }
 
-    /**
-     * @param $storeId
-     * @return bool
-     */
-    public function indexOutOfStockOptions($storeId = null)
-    {
-        return $this->configInterface->isSetFlag(
-            self::INDEX_OUT_OF_STOCK_OPTIONS,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
-    }
 
     /**
      * @param $storeId
@@ -612,6 +602,15 @@ class ConfigHelper
     public function isQueueActive($storeId = null)
     {
         return $this->configInterface->isSetFlag(self::IS_ACTIVE, ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    /**
+     * @param $storeId
+     * @return bool
+     */
+    public function isEnhancedQueueArchiveEnabled($storeId = null)
+    {
+        return $this->configInterface->isSetFlag(self::ENHANCED_QUEUE_ARCHIVE, ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     /**
@@ -1317,6 +1316,7 @@ class ConfigHelper
             'value',
             'query', # suggestions
             'path', # categories
+            'default_bundle_options',
         ]);
         $currencies = $this->dirCurrency->getConfigAllowCurrencies();
         foreach ($currencies as $currency) {

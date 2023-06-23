@@ -25,7 +25,7 @@
                     <label>Application ID</label>
                     <comment>
                         <![CDATA[
-                            You can find your Application ID and API keys in the <a href="https://www.algolia.com/api-keys" target="_blank">Algolia dashboard</a>.
+                            You can find your Application ID and API keys in the <a href="https://www.algolia.com/account/api-keys" target="_blank">Algolia dashboard</a>.
                         ]]>
                     </comment>
                 </field>
@@ -33,7 +33,7 @@
                     <label>Search-only (public) API key</label>
                     <comment>
                         <![CDATA[
-                            You can find your Application ID and API keys in the <a href="https://www.algolia.com/api-keys" target="_blank">Algolia dashboard</a>.
+                            You can find your Application ID and API keys in the <a href="https://www.algolia.com/account/api-keys" target="_blank">Algolia dashboard</a>.
                         ]]>
                     </comment>
                 </field>
@@ -41,7 +41,7 @@
                     <label>Admin API key</label>
                     <comment>
                         <![CDATA[
-                            You can find your Application ID and API keys in the <a href="https://www.algolia.com/api-keys" target="_blank">Algolia dashboard</a>.
+                            You can find your Application ID and API keys in the <a href="https://www.algolia.com/account/api-keys" target="_blank">Algolia dashboard</a>.
                         ]]>
                     </comment>
                 </field>
@@ -326,7 +326,7 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>
                         <![CDATA[
-                            Virtual Replica is only available on Premium plans <a target="_blank" href="https://www.algolia.com/doc/integration/magento-2/how-it-works/indexing/?client=php#switching-to-virtual-replica">documentation</a> 
+                            Virtual Replica is only available on Premium plans <a target="_blank" href="https://www.algolia.com/doc/integration/magento-2/how-it-works/indexing/?client=php#switching-to-virtual-replica">documentation</a>
                         ]]>
                     </comment>
                     <depends>
@@ -446,10 +446,6 @@
                             <br><br>If a customer searches for "blue dress" and refines by "red" color, Algolia will display images for the red (refined) color.
                         ]]>
                     </comment>
-                </field>
-                <field id="index_out_of_stock_options" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Index out of stock options for configurable products</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
         </section>
@@ -749,13 +745,7 @@
                     <label>Enable Indexing Queue</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>
-                        <![CDATA[
-                            If enabled, all indexing operations (add, remove & update operations) will be done asynchronously using the CRON mechanism.<br>
-                            <br>
-                            To schedule the run you need to add this in your crontab:<br>
-                            <code>*/5 * * * * php /absolute/path/to/magento/bin/magento indexer:reindex algolia_queue_runner</code>
-                            <br><span class="algolia-config-warning">&#9888;</span> Enabling this option is recommended in production or if your store has a lot of products.
-                        ]]>
+                        <model>Algolia\AlgoliaSearch\Model\Config\Link</model>
                     </comment>
                 </field>
                 <field id="number_of_job_to_run" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -1019,15 +1009,7 @@
             <resource>Algolia_AlgoliaSearch::algolia_algoliasearch</resource>
             <group id="advanced" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Advanced</label>
-                <field id="number_of_element_by_page" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <validate>validate-digits</validate>
-                    <label>Maximal number of elements per indexing job</label>
-                    <comment>
-                        <![CDATA[
-                            Default value is 300.
-                        ]]>
-                    </comment>
-                </field>
+                <attribute type="expanded">1</attribute>
                 <field id="remove_words_if_no_result" translate="label comment" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Remove Words If No Result</label>
                     <source_model>Algolia\AlgoliaSearch\Model\Source\RemoveWords</source_model>
@@ -1134,14 +1116,6 @@
                         ]]>
                     </comment>
                 </field>
-                <field id="archive_clear_limit" translate="label comment" type="text" sortOrder="95" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Archive log clean limit</label>
-                    <comment>
-                        <![CDATA[
-                            (In days - default value is 30) Sets the limit when the oldest records should be cleared from the archive logs (algoliasearch_queue_archive).
-                        ]]>
-                    </comment>
-                </field>
                 <field id="max_record_size_limit" translate="label comment" type="text" sortOrder="96" showInDefault="1">
                     <label>Max record size limit per record</label>
                     <comment>
@@ -1149,6 +1123,46 @@
                             By default, the Algolia extension has a record size limit of 10 kB per record.
                             If your Algolia plan allows a higher record size limit, you can customize the record size limit.]]>
                     </comment>
+                </field>
+            </group>
+            <group id="queue" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Indexing Queue</label>
+                <attribute type="expanded">1</attribute>
+                <comment>
+                    <![CDATA[
+                            These advanced settings will only apply if the Indexing Queue is enabled.
+                            Indexing Queue is enabled under the "Indexing Queue / Cron" tab.
+                      ]]>
+                </comment>
+                <field id="number_of_element_by_page" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <validate>validate-digits</validate>
+                    <label>Maximum number of records processed per indexing job</label>
+                    <comment>
+                        <![CDATA[
+                            Default value is 300.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="archive_clear_limit" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Archive log clean limit</label>
+                    <comment>
+                        <![CDATA[
+                            (In days - default value is 30) Sets the limit when the oldest records should be cleared from the archive logs (algoliasearch_queue_archive).
+                        ]]>
+                    </comment>
+                </field>
+                <field id="enhanced_archive" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable enhanced archive</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Useful for debugging. Algolia archives failed jobs by default. Enable this setting to archive all jobs that are processed by the indexing queue and to obtain and preserve the stack trace for jobs created.
+                        ]]>
+                        <model>Algolia\AlgoliaSearch\Model\Config\Comment</model>
+                    </comment>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
                 </field>
             </group>
         </section>

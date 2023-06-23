@@ -1,5 +1,35 @@
 # CHANGE LOG
 
+## 3.10.4
+
+### Bug Fixes
+- Fixed the checkout console “tagName” error due to autocomplete not defined by ensuring proper loading of the js library
+- Fixed the undefined config variable issue in recommend
+- Fixed the issue with logged in user token for click and conversion when personification is turned off.
+- Fixed the issue with Items click position for Recommend Events
+- Fixed the issue with Hyphen converted to slash in facets.
+
+
+## 3.10.3
+
+### UPDATES
+- Ensured compatibility of the extension with Magento 2.4.6 with PHP 8.2
+- Addressed dependency when pushing data to Algolia to ensure that the pricing records are in place.
+- Enforce RequireJS for all JavaScript libraries to ensure proper dependency loading order
+- Added support for Algolia Query Suggestions.
+- Added new frontend events for Autocomplete v1 (afterAutocompleteSources and afterAutocompletePlugins)
+- Removed the indexing of out-of-stock options for configurable products from algolia config and instead utilize Magento's out-of-stock settings to determine how products are displayed and indexed. 
+- Introduced enhanced logging for indexing Queue
+
+### Bug Fixes
+- Updated code to fix the autocomplete position during click events.
+- Fixed issue with empty rangeSlider on instant search page
+- Fixed Bundle product add to cart issue for instant search page with default selected options.
+- Addressed missing category data for products when the "show_cats_not_included_in_navigation" option is enabled.
+- Fixed rating_summary issue with null values on the instant search page has been fixed.
+- Added condition to handle algoliaConfig variable if search disabled from admin
+
+
 ## 3.10.2
 
 ### UPDATES

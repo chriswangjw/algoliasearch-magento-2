@@ -14,8 +14,12 @@ define([], function () {
         },
 
         getItemHtml: function ({item, components, html}) {
-            return html`<a class="algoliasearch-autocomplete-hit" href="${item.__autocomplete_queryID != null ? item.urlForInsights : item.url}"
-                data-objectId=${item.objectID} data-index=${item.__autocomplete_indexName} data-queryId=${item.__autocomplete_queryID}>
+            return html`<a class="algoliasearch-autocomplete-hit"
+                           href="${item.__autocomplete_queryID != null ? item.urlForInsights : item.url}"
+                           data-objectId="${item.objectID}"
+                           data-position="${item.position}"
+                           data-index="${item.__autocomplete_indexName}"
+                           data-queryId="${item.__autocomplete_queryID}">
                 <div class="thumb"><img src="${item.thumbnail_url || ''}" alt="${item.name || ''}"/></div>
                 <div class="info">
                     ${components.Highlight({hit: item, attribute: 'name'})}

@@ -65,6 +65,11 @@
             <advanced>
                 <max_record_size_limit>10000</max_record_size_limit>
             </advanced>
+            <queue>
+                <number_of_element_by_page>300</number_of_element_by_page>
+                <archive_clear_limit>30</archive_clear_limit>
+                <enhanced_archive>0</enhanced_archive>
+            </queue>
         </algoliasearch_advanced>
     </default>
 </config>
