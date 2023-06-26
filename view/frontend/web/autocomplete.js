@@ -8,6 +8,8 @@ define(
         'suggestionsHtml',
         'additionalHtml',
         'algoliaCommon',
+        'algoliaCommonJW', // jwc
+        'algoliaCommonDynamic', // jwc
         'algoliaInsights',
         'algoliaHooks',
         'domReady!'
@@ -25,15 +27,14 @@ define(
             return;
         }
 
-        algoliaBundle.$(function ($) {
-            /**
-             * Initialise Algolia client
-             * Docs: https://www.algolia.com/doc/api-client/getting-started/instantiate-client-index/
-             **/
-            const algolia_client = algoliaBundle.algoliasearch(algoliaConfig.applicationId, algoliaConfig.apiKey, {hosts: [{url: 'catalog.jw.com.au'}, {url: algoliaConfig.applicationId+'-dsn.algolia.net'}]}); // jwc
-            algolia_client.addAlgoliaAgent('Magento2 integration (' + algoliaConfig.extensionVersion + ')');
+        /**
+         * Initialise Algolia client
+         * Docs: https://www.algolia.com/doc/api-client/getting-started/instantiate-client-index/
+         **/
+        const algolia_client = algoliaBundle.algoliasearch(algoliaConfig.applicationId, algoliaConfig.apiKey, {hosts: [{url: 'catalog.jw.com.au'}, {url: algoliaConfig.applicationId+'-dsn.algolia.net'}]}); // jwc
+        algolia_client.addAlgoliaAgent('Magento2 integration (' + algoliaConfig.extensionVersion + ')');
 
-            const searchClient = algoliaBundle.algoliasearch(algoliaConfig.applicationId, algoliaConfig.apiKey, {hosts: [{url: 'catalog.jw.com.au'}, {url: algoliaConfig.applicationId+'-dsn.algolia.net'}]}); // jwc
+        const searchClient = algoliaBundle.algoliasearch(algoliaConfig.applicationId, algoliaConfig.apiKey, {hosts: [{url: 'catalog.jw.com.au'}, {url: algoliaConfig.applicationId+'-dsn.algolia.net'}]}); // jwc
 
         // autocomplete code moved from common.js to autocomplete.js
         const transformAutocompleteHit = function (hit, price_key, helper) {

@@ -3,19 +3,21 @@ define(
         'algoliaBundle',
         'Magento_Catalog/js/price-utils',
         'algoliaCommon',
+        'algoliaCommonJW', // jwc
+        'algoliaCommonDynamic', // jwc
         'algoliaInsights',
         'algoliaHooks'
     ],
     function (algoliaBundle, priceUtils) {
         algoliaBundle.$(function ($) {
-		// - jwc: if we're preventing backend rendering on this UA, don't swap out the page
-		// if (!algoliaConfig.isPreventBackendRenderingEnabled) {
-		// 	 return;
-		// }
-		if (new RegExp('prerender', 'i').test(navigator.userAgent)) {
-			algoliaConfig.hitsPerPage = 1000;
-		}
-		// + jwc
+            // - jwc: if we're preventing backend rendering on this UA, don't swap out the page
+            // if (!algoliaConfig.isPreventBackendRenderingEnabled) {
+            // 	 return;
+            // }
+            if (new RegExp('prerender', 'i').test(navigator.userAgent)) {
+                algoliaConfig.hitsPerPage = 1000;
+            }
+            // + jwc
 
             /** We have nothing to do here if instantsearch is not enabled **/
             if (typeof algoliaConfig === 'undefined' || !algoliaConfig.instant.enabled || !(algoliaConfig.isSearchPage || !algoliaConfig.autocomplete.enabled)) {

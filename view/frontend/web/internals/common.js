@@ -629,13 +629,14 @@ define(['jquery', 'algoliaBundle'], function ($, algoliaBundle) {
         });
 
         /** Handle small screen **/
-        $('body').on('click', '#refine-toggle', function () {
-            $('#instant-search-facets-container').toggleClass('hidden-sm').toggleClass('hidden-xs');
-            if ($(this).html().trim()[0] === '+')
-                $(this).html('- ' + algoliaConfig.translations.refine);
-            else
-                $(this).html('+ ' + algoliaConfig.translations.refine);
-        });
+        // jwc
+        // $('body').on('click', '#refine-toggle', function () {
+        //     $('#instant-search-facets-container').toggleClass('hidden-sm').toggleClass('hidden-xs');
+        //     if ($(this).html().trim()[0] === '+')
+        //         $(this).html('- ' + algoliaConfig.translations.refine);
+        //     else
+        //         $(this).html('+ ' + algoliaConfig.translations.refine);
+        // });
 
 
     });
