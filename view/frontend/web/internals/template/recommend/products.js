@@ -33,6 +33,13 @@ define([], function () {
                 ${item['price'][algoliaConfig.currencyCode]['default_original_formated'] ? html`<span class="before_special"> ${item['price'][algoliaConfig.currencyCode]['default_original_formated']} </span>`:''}
             </div>`;
 
+            let dispatchLabelClass = item.dispatchLabelClass;
+            let dispatchEtaLabel = item.dispatch_eta_label ?? item.stock_status_label;
+            if (item.inventoryavailability_primary) {
+                dispatchLabelClass = item.inventoryavailability_primary.availability;
+                dispatchEtaLabel = item.inventoryavailability_primary.leadTimeLabel;
+            }
+
             return  html`<div class="result-wrapper">
                 <a class="result recommend-item product-url" href="${item.url}" data-objectid=${item.objectID}  data-index=${this.defaultIndexName}>
                     <div class="result-content">
@@ -52,7 +59,7 @@ define([], function () {
                             ${addToCartHtml}
                         </div>
                         <div class="store-availability">
-                            <div class="dispatch-label ${item.dispatchLabelClass}"><div class="circle"></div>${item.dispatch_eta_label ?? item.stock_status_label}</div>
+                            <div class="dispatch-label ${dispatchLabelClass}"><div class="circle"></div>${dispatchEtaLabel}</div>
                         </div>
                     </div>
                 </a>
