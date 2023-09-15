@@ -8,13 +8,20 @@ define([], function () {
             }
             this.defaultIndexName = algoliaConfig.indexName + '_products';
 
+            let dispatchLabelClass = item.dispatchLabelClass;
+            let dispatchEtaLabel = item.dispatch_eta_label ?? item.stock_status_label;
+            if (item.inventoryavailability_primary) {
+                dispatchLabelClass = item.inventoryavailability_primary.availability;
+                dispatchEtaLabel = item.inventoryavailability_primary.leadTimeLabel;
+            }
+
             // - jwc
             const addToCartHtml = addTocart && html`
                 <form class="addTocartForm" action="${action}" method="post" data-role="tocart-form">
                     <input type="hidden" name="form_key" value="${algoliaConfig.recommend.addToCartParams.formKey}" />
                     <input type="hidden" name="unec" value="${AlgoliaBase64.mageEncode(action)}"/>
                     <input type="hidden" name="product" value="${item.objectID}" />
-                    <button type="submit" class="action tocart primary stock-status-button--${item.dispatchLabelClass}">
+                    <button type="submit" class="action tocart primary stock-status-button--${dispatchLabelClass}">
                         <svg class="icon">
                             <use href="${item.algoliaRecommendCartSvg}"></use>
                         </svg>
@@ -32,13 +39,6 @@ define([], function () {
                 </span>
                 ${item['price'][algoliaConfig.currencyCode]['default_original_formated'] ? html`<span class="before_special"> ${item['price'][algoliaConfig.currencyCode]['default_original_formated']} </span>`:''}
             </div>`;
-
-            let dispatchLabelClass = item.dispatchLabelClass;
-            let dispatchEtaLabel = item.dispatch_eta_label ?? item.stock_status_label;
-            if (item.inventoryavailability_primary) {
-                dispatchLabelClass = item.inventoryavailability_primary.availability;
-                dispatchEtaLabel = item.inventoryavailability_primary.leadTimeLabel;
-            }
 
             return  html`<div class="result-wrapper">
                 <a class="result recommend-item product-url" href="${item.url}" data-objectid=${item.objectID}  data-index=${this.defaultIndexName}>
