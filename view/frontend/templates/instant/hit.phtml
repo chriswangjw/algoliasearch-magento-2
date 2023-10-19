@@ -108,7 +108,7 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
                             {{#_highlightResult.default_bundle_options}}<input type="hidden" name="bundle_option[{{ optionId }}]" value="{{selectionId}}">{{/_highlightResult.default_bundle_options}}
                             <input type="hidden" name="uenc" value="{{ addToCart.uenc }}">
                             <input name="form_key" type="hidden" value="{{ addToCart.formKey }}">
-                            <button type="submit" title="<?php echo __('Add to Cart') ?>" class="action tocart primary stock-status-button--{{dispatchLabelClass}}"
+                            <button type="submit" title="<?php echo __('Add to Cart') ?>" class="action tocart primary stock-status-button--{{inventoryavailability_primary.availability}}"
                             data-objectid="{{objectID}}"
                             data-indexname="{{__indexName}}"
                             data-position="{{__position}}"
@@ -127,14 +127,14 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
             </a>
             <!-- - jwc -->
             <div class="store-availability">
-                <div class="dispatch-label {{dispatchLabelClass}}" data-sku="{{sku}}" onclick="showAvailabilityModal(this, 'shipping')">
+                <div class="dispatch-label {{inventoryavailability_primary.availability}}" data-sku="{{sku}}" onclick="showAvailabilityModal(this, 'shipping')">
                     <div class="circle"></div>
-                    {{#dispatch_eta_label}}
-                        {{dispatch_eta_label}}
-                    {{/dispatch_eta_label}}
-                    {{^dispatch_eta_label}}
-                        {{stock_status_label}}
-                    {{/dispatch_eta_label}}
+                    {{#inventoryavailability_primary.leadTimeLabel}}
+                        {{inventoryavailability_primary.leadTimeLabel}}
+                    {{/inventoryavailability_primary.leadTimeLabel}}
+                    {{^inventoryavailability_primary.leadTimeLabel}}
+                        {{inventoryavailability_primary.shortDescription}}
+                    {{/inventoryavailability_primary.leadTimeLabel}}
                 </div>
                 <span class="check-store-availability" data-sku="{{sku}}" onclick="showAvailabilityModal(this, 'store')">
                     <svg class="icon" role="presentation" focusable="false"><use href="<?= $block->escapeUrl($block->getViewFileUrl('images/icons-sprite.svg#pin')) ?>"></use></svg>

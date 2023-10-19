@@ -8,13 +8,20 @@ define([], function () {
             }
             this.defaultIndexName = algoliaConfig.indexName + '_products';
 
+            let dispatchLabelClass = item.dispatchLabelClass;
+            let dispatchEtaLabel = item.dispatch_eta_label ?? item.stock_status_label;
+            if (item.inventoryavailability_primary) {
+                dispatchLabelClass = item.inventoryavailability_primary.availability;
+                dispatchEtaLabel = item.inventoryavailability_primary.leadTimeLabel;
+            }
+
             // - jwc
             const addToCartHtml = addTocart && html`
                 <form class="addTocartForm" action="${action}" method="post" data-role="tocart-form">
                     <input type="hidden" name="form_key" value="${algoliaConfig.recommend.addToCartParams.formKey}" />
                     <input type="hidden" name="unec" value="${AlgoliaBase64.mageEncode(action)}"/>
                     <input type="hidden" name="product" value="${item.objectID}" />
-                    <button type="submit" class="action tocart primary stock-status-button--${item.dispatchLabelClass}">
+                    <button type="submit" class="action tocart primary stock-status-button--${dispatchLabelClass}">
                         <svg class="icon">
                             <use href="${item.algoliaRecommendCartSvg}"></use>
                         </svg>
@@ -52,7 +59,7 @@ define([], function () {
                             ${addToCartHtml}
                         </div>
                         <div class="store-availability">
-                            <div class="dispatch-label ${item.dispatchLabelClass}"><div class="circle"></div>${item.dispatch_eta_label ?? item.stock_status_label}</div>
+                            <div class="dispatch-label ${dispatchLabelClass}"><div class="circle"></div>${dispatchEtaLabel}</div>
                         </div>
                     </div>
                 </a>
