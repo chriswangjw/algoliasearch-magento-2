@@ -136,7 +136,7 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
                         {{inventoryavailability_primary.shortDescription}}
                     {{/inventoryavailability_primary.leadTimeLabel}}
                 </div>
-                <span class="check-store-availability" data-sku="{{sku}}" onclick="showAvailabilityModal(this, 'store')">
+                <span class="check-store-availability {{inventoryavailability_primary.inStockAtJwClass}}" data-sku="{{sku}}" onclick="showAvailabilityModal(this, 'store')">
                     <svg class="icon" role="presentation" focusable="false"><use href="<?= $block->escapeUrl($block->getViewFileUrl('images/icons-sprite.svg#pin')) ?>"></use></svg>
                     <u><?php echo __('Check store availability') ?></u>
                 </span>
