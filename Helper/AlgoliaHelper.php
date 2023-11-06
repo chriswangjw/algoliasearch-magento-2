@@ -157,7 +157,7 @@ class AlgoliaHelper extends AbstractHelper
     public function deleteIndex($indexName)
     {
         $this->checkClient(__FUNCTION__);
-        $res = $this->client->initIndex($indexName)->delete();
+        $res = $this->client->initIndex($indexName)->delete()->wait();
 
         self::setLastOperationInfo($indexName, $res);
     }
@@ -193,7 +193,13 @@ class AlgoliaHelper extends AbstractHelper
 
     public function getSettings($indexName)
     {
-        return $this->getIndex($indexName)->getSettings();
+        try {
+            return $this->getIndex($indexName)->getSettings();
+        }catch (\Exception $e) {
+            if ($e->getCode() !== 404) {
+                throw $e;
+            }
+        }
     }
 
     public function mergeSettings($indexName, $settings, $mergeSettingsFrom = '')
