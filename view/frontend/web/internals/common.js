@@ -63,6 +63,23 @@ define(['jquery', 'algoliaBundle'], function ($, algoliaBundle) {
             }, originalData);
 
             return data;
+        },
+        htmlspecialcharsDecode: function(string) {
+            var unescapedString = string,
+                specialchars = [
+                    [ '"', '&quot;' ],
+                    [ '>', '&gt;' ],
+                    [ '<', '&lt;' ],
+                    [ '&', '&amp;' ],
+                    [ "'", '&#39;' ]
+                ];
+
+            var len = specialchars.length;
+            for (var i=0; i<len; i++) {
+                unescapedString = unescapedString.replace(new RegExp(specialchars[i][1], 'g'), specialchars[i][0]);
+            }
+
+            return unescapedString;
         }
     };
 
@@ -198,6 +215,7 @@ define(['jquery', 'algoliaBundle'], function ($, algoliaBundle) {
 
         hit.addToCart = {
             'action': action,
+            'redirectUrlParam': algoliaConfig.instant.addToCartParams.redirectUrlParam,
             'uenc': AlgoliaBase64.mageEncode(action),
             'formKey': algoliaConfig.instant.addToCartParams.formKey
         };

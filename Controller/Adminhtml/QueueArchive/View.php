@@ -13,7 +13,7 @@ class View extends AbstractAction
     {
         $job = $this->initJob();
         if (is_null($job)) {
-            $this->messageManager->addErrorMessage(__('This job does not exists.'));
+            $this->messageManager->addErrorMessage(__('This job does not exist.'));
             /** @var Redirect $resultRedirect */
             $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
 
