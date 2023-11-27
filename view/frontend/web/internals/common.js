@@ -224,7 +224,7 @@ define(['jquery', 'algoliaBundle'], function ($, algoliaBundle) {
         hit.addToCart = {
             'action': action,
             'redirectUrlParam': algoliaConfig.instant.addToCartParams.redirectUrlParam,
-            'uenc': AlgoliaBase64.mageEncode(action),
+            'uenc': algoliaConfig.instant.addToCartParams.currentUrl, // jwc
             'formKey': algoliaConfig.instant.addToCartParams.formKey
         };
 

@@ -275,6 +275,7 @@ class Algolia extends Template implements CollectionDataSourceInterface
         return [
             'action' => $this->_urlBuilder->getUrl('checkout/cart/add', []),
             'formKey' => $this->formKey->getFormKey(),
+            'currentUrl' => base64_encode($this->getStore()->getCurrentUrl()), // jwc
             'redirectUrlParam' => ActionInterface::PARAM_NAME_URL_ENCODED
         ];
     }
