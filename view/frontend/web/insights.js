@@ -222,7 +222,6 @@ define(
                             if (objectId) {
                                 var viewData = self.buildEventData(viewConfig.eventName, objectId, self.defaultIndexName, null, localStorage.getItem("algolia-queryid")); // jwc
                                 $(".button--add-to.tocart").each((i,el) => el.dataset.queryid = localStorage.getItem("algolia-queryid")); // jwc
-                                localStorage.setItem("algolia-queryid", ""); // jwc
                                 self.trackView(viewData);
                             }
                         }
