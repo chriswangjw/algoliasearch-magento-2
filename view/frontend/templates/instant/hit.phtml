@@ -79,7 +79,7 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
                                     <meta itemprop="highPrice" content="{{<?php echo $maxVar; ?>}}" />
                                 {{/<?php echo $maxVar; ?>}}
                                     <meta itemprop="priceCurrency" content="<?php echo $currencyCode; ?>" />
-                                    <div class="price-wrapper">
+                                    <div class="price-wrapper {{hidePriceClassName}}"> <!-- jwc -->
                                         <div>
 
                                             <span class="after_special

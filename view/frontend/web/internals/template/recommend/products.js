@@ -29,10 +29,11 @@ define([], function () {
                 </form>
             `;
 
+            const hidePriceClassName = item['jwc_admintools_hide_price'] ? 'hide-price':'';
             let badgesHtmlArr = [];
             item.badgesArray && item.badgesArray.forEach(b => badgesHtmlArr.push(html`<div class="badge product-view__badge"><span>${b}</span></div>`));
 
-            let priceHtml = html `<div className="algoliasearch-autocomplete-price">
+            let priceHtml = html `<div className="algoliasearch-autocomplete-price ${hidePriceClassName}">
                 <span className="after_special ${item['price'][algoliaConfig.currencyCode]['default_original_formated'] != null ? 'promotion' : ''}"> <!-- jwc -->
                     ${item['price'][algoliaConfig.currencyCode]['default_formated']}
                     <sup>.${item['price'][algoliaConfig.currencyCode]['default_formated_cents'] || ''}</sup>

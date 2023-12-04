@@ -71,8 +71,9 @@ define([], function () {
             if (item['price'] == undefined) return "";
 
             const priceGroup =  algoliaConfig.priceGroup || 'default';
+            const hidePriceClassName = item['jwc_admintools_hide_price'] ? 'hide-price':''; // jwc
 
-            return html `<div className="algoliasearch-autocomplete-price">
+            return html `<div className="algoliasearch-autocomplete-price ${hidePriceClassName}">
                 <span className="after_special ${item['price'][algoliaConfig.currencyCode]['default_original_formated'] != null ? 'promotion' : ''}"> <!-- jwc -->
                     ${item['price'][algoliaConfig.currencyCode][priceGroup + '_formated']}
                 </span>
