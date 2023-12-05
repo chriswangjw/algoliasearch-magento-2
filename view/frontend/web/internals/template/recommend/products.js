@@ -29,7 +29,7 @@ define([], function () {
                 </form>
             `;
 
-            const hidePriceClassName = item['jwc_admintools_hide_price'] ? 'hide-price':'';
+            const hidePriceClassName = item['jwc_admintools_hide_price'] && item['jwc_admintools_hide_price'] === 'Yes' ? 'hide-price':'';
             let badgesHtmlArr = [];
             item.badgesArray && item.badgesArray.forEach(b => badgesHtmlArr.push(html`<div class="badge product-view__badge"><span>${b}</span></div>`));
 
