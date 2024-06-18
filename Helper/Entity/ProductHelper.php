@@ -33,6 +33,7 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Customer\Api\GroupExcludedWebsiteRepositoryInterface;
 
 class ProductHelper
 {
@@ -113,6 +114,11 @@ class ProductHelper
     protected $productAttributes;
 
     /**
+     * @var GroupExcludedWebsiteRepositoryInterface
+     */
+    protected $groupExcludedWebsiteRepository;
+
+    /**
      * @var string[]
      */
     protected $predefinedProductAttributes = [
@@ -166,6 +172,7 @@ class ProductHelper
      * @param Type $productType
      * @param CollectionFactory $productCollectionFactory
      * @param GroupCollection $groupCollection
+     * @param GroupExcludedWebsiteRepositoryInterface groupExcludedWebsiteRepository
      * @param ImageHelper $imageHelper
      */
     public function __construct(
@@ -178,15 +185,15 @@ class ProductHelper
         Visibility             $visibility,
         Stock                  $stockHelper,
         StockRegistryInterface $stockRegistry,
-        CurrencyHelper         $currencyManager,
-        CategoryHelper         $categoryHelper,
-        PriceManager           $priceManager,
-        Type                   $productType,
-        CollectionFactory      $productCollectionFactory,
-        GroupCollection        $groupCollection,
-        ImageHelper            $imageHelper
-    )
-    {
+        CurrencyHelper $currencyManager,
+        CategoryHelper $categoryHelper,
+        PriceManager $priceManager,
+        Type $productType,
+        CollectionFactory $productCollectionFactory,
+        GroupCollection $groupCollection,
+        GroupExcludedWebsiteRepositoryInterface $groupExcludedWebsiteRepository,
+        ImageHelper $imageHelper
+    ) {
         $this->eavConfig = $eavConfig;
         $this->configHelper = $configHelper;
         $this->algoliaHelper = $algoliaHelper;
@@ -202,6 +209,7 @@ class ProductHelper
         $this->productType = $productType;
         $this->productCollectionFactory = $productCollectionFactory;
         $this->groupCollection = $groupCollection;
+        $this->groupExcludedWebsiteRepository = $groupExcludedWebsiteRepository;
         $this->imageHelper = $imageHelper;
     }
 
@@ -452,7 +460,6 @@ class ProductHelper
          * Handle replicas
          */
         $sortingIndices = $this->configHelper->getSortingIndices($indexName, $storeId);
-
         $replicas = [];
 
         if ($this->configHelper->isInstantEnabled($storeId)) {
@@ -463,7 +470,7 @@ class ProductHelper
 
         // Managing Virtual Replica
         if ($this->configHelper->useVirtualReplica($storeId)) {
-            $replicas = $this->handleVirtualReplica($replicas, $indexName);
+           $replicas = $this->handleVirtualReplica($replicas);
         }
 
         // Merge current replicas with sorting replicas to not delete A/B testing replica indices
@@ -483,7 +490,6 @@ class ProductHelper
             $this->logger->log('Setting replicas to "' . $indexName . '" index.');
             $this->logger->log('Replicas: ' . json_encode($replicas));
             $setReplicasTaskId = $this->algoliaHelper->getLastTaskId();
-
             if (!$this->configHelper->useVirtualReplica($storeId)) {
                 foreach ($sortingIndices as $values) {
                     $replicaName = $values['name'];
@@ -773,9 +779,11 @@ class ProductHelper
      */
     protected function dedupePaths($paths): array
     {
-        return array_intersect_key(
-            $paths,
-            array_unique(array_map('serialize', $paths))
+        return array_values(
+            array_intersect_key(
+                $paths,
+                array_unique(array_map('serialize', $paths))
+            )
         );
     }
 
@@ -1229,7 +1237,7 @@ class ProductHelper
             $value = $attributeResource->getFrontend()->getValue($product);
         }
 
-        if ($value) {
+        if ($value !== null) {
             $customData[$attribute['attribute']] = $value;
         }
 
@@ -1300,6 +1308,8 @@ class ProductHelper
     /**
      * @param $storeId
      * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     protected function getAttributesForFaceting($storeId)
     {
@@ -1308,6 +1318,7 @@ class ProductHelper
         $currencies = $this->currencyManager->getConfigAllowCurrencies();
 
         $facets = $this->configHelper->getFacets($storeId);
+        $websiteId = (int)$this->storeManager->getStore($storeId)->getWebsiteId();
         foreach ($facets as $facet) {
             if ($facet['attribute'] === 'price') {
                 foreach ($currencies as $currency_code) {
@@ -1315,9 +1326,12 @@ class ProductHelper
 
                     if ($this->configHelper->isCustomerGroupsEnabled($storeId)) {
                         foreach ($this->groupCollection as $group) {
-                            $group_id = (int)$group->getData('customer_group_id');
-
-                            $attributesForFaceting[] = 'price.' . $currency_code . '.group_' . $group_id;
+                            $groupId = (int)$group->getData('customer_group_id');
+                            $excludedWebsites = $this->groupExcludedWebsiteRepository->getCustomerGroupExcludedWebsites($groupId);
+                            if (in_array($websiteId, $excludedWebsites)) {
+                                continue;
+                            }
+                            $attributesForFaceting[] = 'price.' . $currency_code . '.group_' . $groupId;
                         }
                     }
 
@@ -1532,12 +1546,55 @@ class ProductHelper
      * @param $replica
      * @return array
      */
-    protected function handleVirtualReplica($replicas, $indexName)
+    public function handleVirtualReplica($replicas)
     {
         $virtualReplicaArray = [];
         foreach ($replicas as $replica) {
             $virtualReplicaArray[] = 'virtual(' . $replica . ')';
         }
         return $virtualReplicaArray;
+    }
+
+    /**
+     * @param $indexName
+     * @param $storeId
+     * @param $sortingAttribute
+     * @return void
+     * @throws AlgoliaException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function handlingReplica($indexName, $storeId, $sortingAttribute = false) {
+        $sortingIndices = $this->configHelper->getSortingIndices($indexName, $storeId, null, $sortingAttribute);
+        if ($this->configHelper->isInstantEnabled($storeId)) {
+            $replicas = array_values(array_map(function ($sortingIndex) {
+                return $sortingIndex['name'];
+            }, $sortingIndices));
+
+            try {
+                $replicasFormated = $this->handleVirtualReplica($replicas);
+                $availableReplicaMatch = array_merge($replicasFormated, $replicas);
+                if ($this->configHelper->useVirtualReplica($storeId)) {
+                   $replicas = $replicasFormated;
+                }
+                $currentSettings = $this->algoliaHelper->getSettings($indexName);
+                if (is_array($currentSettings) && array_key_exists('replicas', $currentSettings)) {
+                    $replicasRequired = array_values(array_diff($currentSettings['replicas'], $availableReplicaMatch));
+                    $this->algoliaHelper->setSettings($indexName, ['replicas' => $replicasRequired]);
+                    $setReplicasTaskId = $this->algoliaHelper->getLastTaskId();
+                    $this->algoliaHelper->waitLastTask($indexName, $setReplicasTaskId);
+                    if (count($availableReplicaMatch) > 0) {
+                        foreach ($availableReplicaMatch as $replicaIndex) {
+                            $this->algoliaHelper->deleteIndex($replicaIndex);
+                        }
+                    }
+                }
+            } catch (AlgoliaException $e) {
+                if ($e->getCode() !== 404) {
+                    $this->logger->log($e->getMessage());
+                    throw $e;
+                }
+            }
+        }
+        return true;
     }
 }
