@@ -147,14 +147,14 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
 </script>
 
 <!-- jwc -->
-<script>
+<?= $secureRenderer->renderTag('script', ['type' => 'text/javascript'], '
     showLoadingSpinner = (el) => {
-        el.querySelector('.icon').classList.add('hide');
-        el.querySelector('.loading-spinner').classList.remove('hide');
+        el.querySelector(".icon").classList.add("hide");
+        el.querySelector(".loading-spinner").classList.remove("hide");
         el.setAttribute("disabled", "disabled");
         el.classList.add("disabled");
     }
-    requirejs(['availability-modal'], function (availabilityModal) {
+    requirejs(["availability-modal"], function (availabilityModal) {
         showAvailabilityModal = (el, method) => {
             const sku = el.getAttribute("data-sku");
             availabilityModal({
@@ -163,5 +163,5 @@ $origFormatedVar = $block->escapeHtml('price' . $priceKey . '_original_formated'
             });
         }
     });
-</script>
+', false); ?>
 <!-- jwc -->
