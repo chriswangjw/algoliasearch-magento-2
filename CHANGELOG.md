@@ -1,5 +1,77 @@
 # CHANGE LOG
 
+## 3.13.3
+
+### Updates
+- Updated CSP whitelist
+- Updated code to show current version of AlgoliaSearch extension in Magento admin
+- Updated code to make compatible with PHP 7
+- Updated code and merged community submitted PRs
+- Updated code for consistent auth tokens
+- Updated code for Autocomplete highlights
+
+### Bug Fixes
+- Fixed issues with Recommend items in mobile view
+- Fixed issue related to decompoundedAttributes admin config error
+- Fixed issue with Analytics Overview date format bug
+
+
+## 3.13.2
+
+### Updates
+- Updated code to refactor the deprecated usage of the registry in the extension
+- Updated the code to prevent the creation of indexer for websites excluded in customer groups
+- Removed the unused polyfill script from the extension.
+
+### Bug Fixes
+- Fixed issue with the special price range for configurable products
+- Fixed issue with tier prices
+- Fixed issue causing duplicate replica errors to occur when saving the configuration.
+
+
+## 3.13.1
+
+### Bug Fixes
+- Fixed the issue with PHP8.2 compatibility for recommendations on the cart page
+
+## 3.13.0
+
+### Updates
+- Updated instantSearch library version from 4.41.0 to 4.63.0
+- Updated disclaimer for advanced algolia indices settings in the magento admin
+  
+## 3.12.1
+
+### Updates
+- Updated  insights library version from 2.6.0 to 2.11.0
+- Updated all click events to add authenticatedUserToken for login customer
+- Updated view events to add authenticatedUserToken for login customer
+- Added German translations in plugin
+- Updated code to provide a way for customers to modify timeout values for Algolia PHP Client
+
+### Bug Fixes
+- Fixed the issue with recommendations for grouped products in cart page
+- Fixed the issue with InstantSearch filters with quotations
+
+## 3.12.0
+
+### Updates
+- Updated code to consider user’s cookie consent to send events to Algolia by using ‘useCookie’ parameter
+- Updated references to support@algolia.com to new ticket link
+- Updated code to refactor the deprecated registry for categories
+- Updated code to ensure compatibility with NeuralSearch
+- Updated AlgoliaBundle by eliminating the unnecessary jQuery library
+- Included the promotion class in autocomplete menu when a product has any promotions
+
+### Bug Fixes
+- Fixed formatting issue in product object related to CategoryPageId attribute
+- Fixed issue with Clear Refinements button in InstantSearch page
+- Fixed issue with custom banner functionality via merchandising dashboard in admin
+- Fixed issue with hierarchicalMenu widget when utilizing transformItems when the number of categories exceeded the limit
+- Fixed issue with indexing text field attributes with a value of 0
+- Fixed issue with user cookies not clearing upon customer logout
+- Fixed back button issue with pagination in instant search page and category pages
+  
 ## 3.11.0
 
 ### Updates

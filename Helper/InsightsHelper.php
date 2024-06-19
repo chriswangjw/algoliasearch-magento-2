@@ -5,7 +5,9 @@ namespace Algolia\AlgoliaSearch\Helper;
 use Algolia\AlgoliaSearch\Helper\Configuration\PersonalizationHelper;
 use Algolia\AlgoliaSearch\Insights\UserInsightsClient;
 use Algolia\AlgoliaSearch\InsightsClient;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\CookieManagerInterface;
 
@@ -15,11 +17,21 @@ class InsightsHelper
 
     public const ALGOLIA_CUSTOMER_USER_TOKEN_COOKIE_NAME = 'aa-search';
 
+    /**
+     * Up to 129 chars per https://www.algolia.com/doc/rest-api/insights/#method-param-usertoken
+     * But capping at legacy 64 chars for backward compat
+     */
+    /** @var int */
+    public const ALGOLIA_USER_TOKEN_MAX_LENGTH = 64;
+
     /** @var ConfigHelper */
     private $configHelper;
 
     /** @var PersonalizationHelper */
     private $personalizationHelper;
+
+    /** @var SessionManagerInterface */
+    private $sessionManager;
 
     /** @var CookieManagerInterface */
     private $cookieManager;
@@ -48,12 +60,14 @@ class InsightsHelper
     public function __construct(
         ConfigHelper $configHelper,
         PersonalizationHelper $personalizationHelper,
+        SessionManagerInterface $sessionManager,
         CookieManagerInterface $cookieManager,
         CookieMetadataFactory $cookieMetadataFactory,
         CustomerSession $customerSession
     ) {
         $this->configHelper = $configHelper;
         $this->personalizationHelper = $personalizationHelper;
+        $this->sessionManager = $sessionManager;
         $this->cookieManager = $cookieManager;
         $this->cookieMetadataFactory = $cookieMetadataFactory;
         $this->customerSession = $customerSession;
@@ -142,11 +156,11 @@ class InsightsHelper
     }
 
     /**
-     * @param \Magento\Customer\Model\Customer $customer
+     * @param Customer $customer
      *
      * @return string
      */
-    public function setUserToken(\Magento\Customer\Model\Customer $customer)
+    public function setUserToken(Customer $customer)
     {
         $userToken = base64_encode('customer-' . $customer->getEmail() . '-' . $customer->getId());
         $userToken = 'aa-' . preg_replace('/[^A-Za-z0-9\-]/', '', $userToken);
@@ -165,5 +179,12 @@ class InsightsHelper
         }
 
         return $userToken;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUserAllowedSavedCookie() {
+        return $this->configHelper->isCookieRestrictionModeEnabled() ? !!$this->cookieManager->getCookie($this->configHelper->getDefaultConsentCookieName()) : true;
     }
 }

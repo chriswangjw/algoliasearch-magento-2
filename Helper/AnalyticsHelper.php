@@ -6,6 +6,7 @@ use Algolia\AlgoliaSearch\AnalyticsClient;
 use Algolia\AlgoliaSearch\Config\AnalyticsConfig;
 use Algolia\AlgoliaSearch\DataProvider\Analytics\IndexEntityDataProvider;
 use Algolia\AlgoliaSearch\RequestOptions\RequestOptionsFactory;
+use Magento\Framework\Locale\ResolverInterface;
 
 class AnalyticsHelper
 {
@@ -13,9 +14,6 @@ class AnalyticsHelper
     public const ANALYTICS_HITS_PATH = '/2/hits';
     public const ANALYTICS_FILTER_PATH = '/2/filters';
     public const ANALYTICS_CLICKS_PATH = '/2/clicks';
-
-    /** @var AlgoliaHelper */
-    private $algoliaHelper;
 
     /** @var ConfigHelper */
     private $configHelper;
@@ -25,6 +23,12 @@ class AnalyticsHelper
 
     /** @var Logger */
     private $logger;
+
+    /** @var ResolverInterface */
+    private $localeResolver;
+
+    public const DATE_FORMAT_PICKER             = 'dd MMM yyyy';
+    public const DATE_FORMAT_API                = 'Y-m-d';
 
     private $searches;
     private $users;
@@ -51,33 +55,29 @@ class AnalyticsHelper
     private $analyticsConfig;
 
     /**
-     * Can be changed through DI
+     * Region can be modified via the Magento configuration
      *
      * @var string
      */
-    private $region;
+    protected $region;
 
     /**
-     * @param AlgoliaHelper $algoliaHelper
      * @param ConfigHelper $configHelper
      * @param IndexEntityDataProvider $entityHelper
      * @param Logger $logger
-     * @param string $region
+     * @param ResolverInterface $localeResolver
      */
     public function __construct(
-        AlgoliaHelper $algoliaHelper,
         ConfigHelper $configHelper,
         IndexEntityDataProvider $entityHelper,
         Logger $logger,
-        string $region = 'us'
+        ResolverInterface $localeResolver
     ) {
-        $this->algoliaHelper = $algoliaHelper;
         $this->configHelper = $configHelper;
-
         $this->entityHelper = $entityHelper;
-
         $this->logger = $logger;
-        $this->region = $region;
+        $this->localeResolver = $localeResolver;
+        $this->region = $this->configHelper->getAnalyticsRegion();
     }
 
     private function setupAnalyticsClient()
@@ -85,6 +85,7 @@ class AnalyticsHelper
         if ($this->analyticsClient) {
             return;
         }
+
 
         $this->analyticsClient = AnalyticsClient::create(
             $this->configHelper->getApplicationID(),
@@ -370,4 +371,17 @@ class AnalyticsHelper
     {
         return $this->errors;
     }
+
+    /**
+     * @param string $timezone
+     * @return \IntlDateFormatter
+     */
+    public function getAnalyticsDatePickerFormatter(string $timezone): \IntlDateFormatter
+    {
+        $locale = $this->localeResolver->getLocale();
+        $dateFormatter = new \IntlDateFormatter($locale, \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, $timezone);
+        $dateFormatter->setPattern(self::DATE_FORMAT_PICKER);
+        return $dateFormatter;
+    }
+
 }

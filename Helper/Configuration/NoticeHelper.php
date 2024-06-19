@@ -44,6 +44,7 @@ class NoticeHelper extends \Magento\Framework\App\Helper\AbstractHelper
         'getClickAnalyticsNotice',
         'getPersonalizationNotice',
         'getRecommendNotice',
+        'getCookieConfigurationNotice',
     ];
 
     /** @var array[] */
@@ -156,23 +157,33 @@ class NoticeHelper extends \Magento\Framework\App\Helper\AbstractHelper
         ];
     }
 
-    protected function getVersionNotice()
+    protected function getVersionNotice(): void
     {
+        $currentVersion = $this->configHelper->getExtensionVersion();
         $newVersion = $this->getNewVersionNotification();
-        if ($newVersion === null) {
+        if (!$currentVersion && !$newVersion) {
             return;
         }
 
-        $noticeTitle = 'Algolia Extension update';
-        $noticeContent = 'You are using old version of Algolia extension. Latest version of the extension is v <b>' . $newVersion['version'] . '</b><br />
+        $notice = [
+            'selector' => '.entry-edit',
+            'method' => 'before'
+        ];
+
+        if ($newVersion) {
+            $noticeTitle = 'Algolia extension update';
+            $noticeContent = 'You are using an old version of Algolia extension. Latest version of the extension is v <b>' . $newVersion['version'] . '</b><br />
 							It is highly recommended to update your version to avoid any unexpected issues and to get new features.<br />
 							See details on our <a target="_blank" href="' . $newVersion['url'] . '">Github repository</a>.';
+            $notice['message'] = $this->formatNotice($noticeTitle, $noticeContent);
+        }
+        else {
+            $noticeTitle = 'Algolia extension version';
+            $noticeContent = "You are using version <strong>$currentVersion</strong> of the Algolia Magento integration.";
+            $notice['message'] = $this->formatNotice($noticeTitle, $noticeContent, 'icon-bulb');
+        }
 
-        $this->notices[] = [
-            'selector' => '.entry-edit',
-            'method' => 'before',
-            'message' => $this->formatNotice($noticeTitle, $noticeContent),
-        ];
+        $this->notices[] = $notice;
     }
 
     protected function getClickAnalyticsNotice()
@@ -200,6 +211,27 @@ class NoticeHelper extends \Magento\Framework\App\Helper\AbstractHelper
         </tr>';
         $selector = '#row_algoliasearch_cc_analytics_cc_analytics_group_enable';
         $method = 'before';
+
+        $this->notices[] = [
+            'selector' => $selector,
+            'method' => $method,
+            'message' => $noticeContent,
+        ];
+    }
+
+   protected function getCookieConfigurationNotice()
+   {
+        $noticeContent = '';
+        $selector = '';
+        $method = 'after';
+
+        // If the feature is enabled in the Algolia dashboard but not activated on the Magento Admin
+        $noticeContent = '
+                <div class="algolia_block_cookie">
+                Find out more about Algolia Cookie Configuration in <a href="https://www.algolia.com/doc/integration/magento-2/how-it-works/analytics-overview/?client=php#algolia-cookie-configuration?utm_source=magento&utm_medium=extension&utm_campaign=magento_2&utm_term=shop-owner&utm_content=doc-link" target="_blank">documentation</a>.
+                </div>';
+        $selector = '#algoliasearch_credentials_algolia_cookie_configuration';
+        $method = 'after';
 
         $this->notices[] = [
             'selector' => $selector,

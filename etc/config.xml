@@ -12,6 +12,11 @@
                 <enable_query_suggestions_index>1</enable_query_suggestions_index>
                 <enable_pages_index>1</enable_pages_index>
             </credentials>
+            <algolia_cookie_configuration>
+                <default_consent_cookie_name>user_allowed_save_cookie</default_consent_cookie_name>
+                <allow_cookie_button_selector>#btn-cookie-allow</allow_cookie_button_selector>
+                <cookie_duration>15552000000</cookie_duration>
+            </algolia_cookie_configuration>
         </algoliasearch_credentials>
         <algoliasearch_autocomplete>
             <autocomplete>
@@ -76,6 +81,10 @@
         <algoliasearch_advanced>
             <advanced>
                 <max_record_size_limit>10000</max_record_size_limit>
+                <analytics_region>us</analytics_region>
+                <connection_timeout>2</connection_timeout>
+                <read_timeout>30</read_timeout>
+                <write_timeout>30</write_timeout>
             </advanced>
             <queue>
                 <number_of_element_by_page>300</number_of_element_by_page>

@@ -5,7 +5,8 @@ define(
         'algoliaBundle',
         'algoliaCommon',
         'algoliaCommonJW', // jwc
-        'algoliaCommonDynamic', // jwc
+        'algoliaCommonDynamic', // jwc,
+        'mage/cookies'
     ],
     function ($, algoliaAnalyticsWrapper, algoliaBundle) {
         algoliaAnalytics = algoliaAnalyticsWrapper.default;
@@ -15,19 +16,25 @@ define(
             defaultIndexName:   null,
             isTracking:         false,
             hasAddedParameters: false,
+            useCookie:          false,
 
-            track: function (algoliaConfig) {
-                if (this.isTracking) {
-                    return;
-                }
+            // Although events can accept both auth and anon tokens, queries can only accept a single token
+            determineUserToken() {
+                return algoliaAnalytics.getAuthenticatedUserToken() ?? algoliaAnalytics.getUserToken();
+            },
 
+            track: function (algoliaConfig, partial = false) {
                 this.config = algoliaConfig;
                 this.defaultIndexName = algoliaConfig.indexName + '_products';
+                this.useCookie = this.config.cookieConfiguration.cookieRestrictionModeEnabled ? !!getCookie(this.config.cookieConfiguration.consentCookieName) : true;
+                if (this.isTracking || this.useCookie === false) {
+                    return;
+                }
 
                 if (algoliaConfig.ccAnalytics.enabled
                     || algoliaConfig.personalization.enabled) {
 
-                    this.initializeAnalytics();
+                    this.initializeAnalytics(partial);
                     this.addSearchParameters();
                     this.bindData();
                     this.bindEvents();
@@ -36,20 +43,51 @@ define(
                 }
             },
 
-            initializeAnalytics: function () {
-                algoliaAnalytics.init({
-                    appId:  this.config.applicationId,
-                    apiKey: this.config.apiKey
-                });
+            initializeAnalytics: function (partial = false) {
+                let useCookie = this.config.cookieConfiguration.cookieRestrictionModeEnabled ? !!getCookie(this.config.cookieConfiguration.consentCookieName) : true;
+                if (partial) {
+                    algoliaAnalytics.init({
+                        appId:  this.config.applicationId,
+                        apiKey: this.config.apiKey,
+                        partial: true,
+                        useCookie: useCookie,
+                        cookieDuration: Number(this.config.cookieConfiguration.cookieDuration)
+                    });
+                } else {
+                    algoliaAnalytics.init({
+                        appId:  this.config.applicationId,
+                        apiKey: this.config.apiKey,
+                        useCookie: useCookie,
+                        cookieDuration: Number(this.config.cookieConfiguration.cookieDuration)
+                    });
+                }
 
-            algoliaAnalytics._endpointOrigin = 'https://insights.jw.com.au'; // jwc
+                algoliaAnalytics._endpointOrigin = 'https://insights.jw.com.au'; // jwc
 
-            var userAgent = 'insights-js-in-magento (' + this.config.extensionVersion + ')';
-            algoliaAnalytics.addAlgoliaAgent(userAgent);
+                var userAgent = 'insights-js-in-magento (' + this.config.extensionVersion + ')';
+                algoliaAnalytics.addAlgoliaAgent(userAgent);
 
                 var userToken = getCookie('aa-search');
-                if (userToken && userToken !== '') algoliaAnalytics.setUserToken(userToken);
+                var unsetAuthenticationToken = getCookie('unset_authentication_token');
+                if (userToken && userToken !== '') {
+                    algoliaAnalytics.setAuthenticatedUserToken(userToken);
+                } else if (unsetAuthenticationToken && unsetAuthenticationToken !== '') {
+                    algoliaAnalytics.setAuthenticatedUserToken('undefined');
+                    $.mage.cookies.clear('unset_authentication_token');
+                }
+            },
 
+            applyInsightsToSearchParams(params = {}) {
+                if (algoliaConfig.ccAnalytics.enabled) {
+                    params.clickAnalytics = true;
+                }
+
+                if (algoliaConfig.personalization.enabled) {
+                    params.enablePersonalization = true;
+                    params.userToken = this.determineUserToken();
+                }
+
+                return params;
             },
 
             addSearchParameters: function () {
@@ -57,29 +95,16 @@ define(
                     return;
                 }
 
-                algolia.registerHook('beforeWidgetInitialization', function (allWidgetConfiguration) {
-                    allWidgetConfiguration.configure = allWidgetConfiguration.configure || {};
-                    if (algoliaConfig.ccAnalytics.enabled) {
-                        allWidgetConfiguration.configure.clickAnalytics = true;
-                    }
-
-                    if (algoliaConfig.personalization.enabled) {
-                        allWidgetConfiguration.configure.enablePersonalization = true;
-                        allWidgetConfiguration.configure.userToken = algoliaAnalytics.getUserToken();
-                    }
+                algolia.registerHook('beforeWidgetInitialization', (allWidgetConfiguration) => {
+                    allWidgetConfiguration.configure = algoliaInsights.applyInsightsToSearchParams(
+                        allWidgetConfiguration.configure
+                    );
 
                     return allWidgetConfiguration;
                 });
 
-                algolia.registerHook('afterAutocompleteProductSourceOptions', function (options) {
-                    if (algoliaConfig.ccAnalytics.enabled) {
-                        options.clickAnalytics = true;
-                    }
-                    if (algoliaConfig.personalization.enabled) {
-                        options.enablePersonalization = true;
-                        options.userToken = algoliaAnalytics.getUserToken();
-                    }
-                    return options;
+                algolia.registerHook('afterAutocompleteProductSourceOptions', (options) => {
+                    return algoliaInsights.applyInsightsToSearchParams(options);
                 });
 
                 this.hasAddedParameters = true;
@@ -113,7 +138,7 @@ define(
 
                 var self = this;
 
-                algoliaBundle.$(function ($) {
+                $(function ($) {
                     $(self.config.autocomplete.selector).on('autocomplete:selected', function (e, suggestion) {
                         var eventData = self.buildEventData(
                             'Clicked', suggestion.objectID, suggestion.__indexName, suggestion.__position, suggestion.__queryID
@@ -285,8 +310,12 @@ define(
 
         algoliaInsights.addSearchParameters();
 
-        algoliaBundle.$(function ($) {
+        $(function ($) {
             if (window.algoliaConfig) {
+                $(document).on('click', algoliaConfig.cookieConfiguration.cookieAllowButtonSelector, function (event) {
+                    event.preventDefault();
+                    algoliaInsights.track(algoliaConfig, true);
+                });
                 algoliaInsights.track(algoliaConfig);
             }
         });

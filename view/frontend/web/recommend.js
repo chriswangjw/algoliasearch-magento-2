@@ -22,7 +22,7 @@ define([
     // + jwc
 
     return function (config, element) {
-        algoliaBundle.$(function ($) {
+        $(function ($) {
             this.defaultIndexName = algoliaConfig.indexName + '_products';
             const appId = algoliaConfig.applicationId;
             const apiKey = algoliaConfig.apiKey;
