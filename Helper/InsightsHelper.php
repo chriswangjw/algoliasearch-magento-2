@@ -8,6 +8,7 @@ use Algolia\AlgoliaSearch\InsightsClient;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\CookieManagerInterface;
+use Ramsey\Uuid\Uuid;
 
 class InsightsHelper
 {
@@ -135,6 +136,9 @@ class InsightsHelper
             } else {
                 //return anonymous user
                 $userToken = $this->cookieManager->getCookie(self::ALGOLIA_ANON_USER_TOKEN_COOKIE_NAME);
+                if (!$userToken) {
+                    $userToken = "anonymous-" . Uuid::uuid4();
+                }
             }
         }
 
