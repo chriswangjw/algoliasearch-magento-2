@@ -150,9 +150,11 @@ class InsightsHelper
             } else {
                 //return anonymous user
                 $userToken = $this->cookieManager->getCookie(self::ALGOLIA_ANON_USER_TOKEN_COOKIE_NAME);
+                // start jwc patch
                 if (!$userToken) {
                     $userToken = "anonymous-" . Uuid::uuid4();
                 }
+                // end jwc patch
             }
         }
 
