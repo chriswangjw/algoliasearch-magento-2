@@ -1,5 +1,40 @@
 # CHANGE LOG
 
+## 3.13.5
+
+### Updates
+- Polyfill.io removed from CSP whitelist - Thank you @hostep
+- Hide Recommend Titles when not in use
+- Incorporate community fix for higher specificity CSS selectors on Recommend - Thank you @sgeleon
+
+### Bug Fixes
+- Incorporate community fix for missing DOM element selector - Thank you @sgeleon
+
+## 3.13.4
+
+### Bug Fixes
+- Fixed XSS vulnerability issue in InstantSearch search box
+- Fixed Algolia merchandising product listing issue
+- Fixed lock timeout issue on indexing queue integration test
+- Community fix added - job queue dropping jobs from sandwiched full reindexes - thank you @pikulsky
+
+
+## 3.13.3
+
+### Updates
+- Updated CSP whitelist
+- Updated code to show current version of AlgoliaSearch extension in Magento admin
+- Updated code to make compatible with PHP 7
+- Updated code and merged community submitted PRs
+- Updated code for consistent auth tokens
+- Updated code for Autocomplete highlights
+
+### Bug Fixes
+- Fixed issues with Recommend items in mobile view
+- Fixed issue related to decompoundedAttributes admin config error
+- Fixed issue with Analytics Overview date format bug
+
+
 ## 3.13.2
 
 ### Updates

@@ -92,7 +92,7 @@ abstract class ProductWithoutChildren
         Rule $rule,
         ProductFactory $productloader,
         ScopedProductTierPriceManagementInterface $productTierPrice,
-        Logger $logger,
+        Logger $logger
     ) {
         $this->configHelper = $configHelper;
         $this->customerGroupCollectionFactory = $customerGroupCollectionFactory;
@@ -380,7 +380,7 @@ abstract class ProductWithoutChildren
                 $this->formatPrice($tierPrice[0], $currencyCode);
         }
     }
-    # TODO bookmarking getRulePrice function for a future refactor effort.
+    // TODO bookmarking getRulePrice function for a future refactor effort.
     /**
      * @param $groupId
      * @param $product
