@@ -1,4 +1,18 @@
 define(['jquery', 'algoliaBundle'], function ($, algoliaBundle) {
+    // Character maps supplied for more performant Regex ops
+    const SPECIAL_CHAR_ENCODE_MAP = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+
+    /// Reverse key / value pair
+    const SPECIAL_CHAR_DECODE_MAP = Object.entries(SPECIAL_CHAR_ENCODE_MAP).reduce((acc, [key, value]) => {
+        acc[value] = key;
+        return acc;
+    }, {});
 
     window.algolia = {
         deprecatedHooks: [
@@ -64,22 +78,13 @@ define(['jquery', 'algoliaBundle'], function ($, algoliaBundle) {
 
             return data;
         },
-        htmlspecialcharsDecode: function(string) {
-            var unescapedString = string,
-                specialchars = [
-                    [ '"', '&quot;' ],
-                    [ '>', '&gt;' ],
-                    [ '<', '&lt;' ],
-                    [ '&', '&amp;' ],
-                    [ "'", '&#39;' ]
-                ];
-
-            var len = specialchars.length;
-            for (var i=0; i<len; i++) {
-                unescapedString = unescapedString.replace(new RegExp(specialchars[i][1], 'g'), specialchars[i][0]);
-            }
-
-            return unescapedString;
+        htmlspecialcharsDecode: string => {
+            const regex = new RegExp(Object.keys(SPECIAL_CHAR_DECODE_MAP).join('|'), 'g');
+            return string.replace(regex, m => SPECIAL_CHAR_DECODE_MAP[m]);
+        },
+        htmlspecialcharsEncode: string => {
+            const regex = new RegExp(`[${Object.keys(SPECIAL_CHAR_ENCODE_MAP).join('')}]`, 'g');
+            return string.replace(regex, (m) => SPECIAL_CHAR_ENCODE_MAP[m]);
         }
     };
 
@@ -641,7 +646,9 @@ define(['jquery', 'algoliaBundle'], function ($, algoliaBundle) {
             var input = $(this).closest('#algolia-searchbox').find('input');
 
             input.val('');
-            input.get(0).dispatchEvent(new Event('input'));
+            if (input.length) {
+                input.get(0).dispatchEvent(new Event('input'));
+            }
 
             handleInputCrossAutocomplete(input);
         });
