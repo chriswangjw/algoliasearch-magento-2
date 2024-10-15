@@ -234,7 +234,6 @@ define(
                             return productsHtml.getHeaderHtml({items, html})
                         },
                         item({item, components, html}) {
-                            window.setupAutocompleteOverlay(); // jwc
                             if (suggestionSection) {
                                 $('.aa-Panel').addClass('productColumn2');
                                 $('.aa-Panel').removeClass('productColumn1');
