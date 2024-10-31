@@ -532,6 +532,7 @@ define(
         });
         options.plugins = plugins;
 
+        if (window.isMobile()) options.detachedMediaQuery = ''; // jwc
         options = algolia.triggerHooks('afterAutocompleteOptions', options);
 
         /** Bind autocomplete feature to the input */
